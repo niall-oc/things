@@ -205,3 +205,15 @@ def propose_house(positions, property, value, state):
         if house not in positions:
             new_state = remove_value(house, property, value, new_state)
     return new_state
+
+def end_solution(state):
+    """
+    If every property set has only 1 value left then we have solved the puzzle.
+    
+    :param dict state: The current state of the world.
+    """
+    for house, properties in state.iteritems(): # In this house
+        for property, values in properties.iteritems(): # Examine the properties
+            if len(values) > 1:
+                return False
+    return True
