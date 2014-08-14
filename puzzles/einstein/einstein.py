@@ -1,6 +1,7 @@
 from   copy import deepcopy
 import logging
 
+logging.basicConfig(level=logging.INFO)
 
 house_colors =  ['red',     'green',  'blue',     'white',   'yellow']
 nationalities = ['british', 'danish', 'german',   'swedish', 'norweigen']
@@ -58,8 +59,10 @@ def remove_value(position, property, value, state):
     new_state = deepcopy(state)
     try:
         new_state[position][property].remove(value)
+        logging.info('house %s, %s removed %s', position, property, value)
     except KeyError:
-        logging.warning("Value %s can't be removed from %s", value, property)
+        #logging.warning("Value %s can't be removed from %s", value, property)
+        pass
     finally:
         if not new_state[position][property]:
             raise StateError("House %s, %s no values left!", position, property)
@@ -81,6 +84,7 @@ def assign_value(position, property, value, state):
     :return dict: The new state of world.
     """
     new_state = deepcopy(state)
+    logging.debug('house %s, %s = %s', position, property, value)
     new_state[position][property] = set([value])
     for house, details in new_state.iteritems():
         if house != position:
