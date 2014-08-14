@@ -89,14 +89,7 @@ def rule6(state):
 
 def rule7(state):
     """The owner of the yellow house plays hockey."""
-    yellow_house = einstein.get_position('yellow', state)
-    hockey_house = einstein.get_position('hockey', state)
-    if yellow_house:
-        return einstein.assign_value(yellow_house, 'sport', 'hockey', state)
-    elif hockey_house:
-        return einstein.assign_value(yellow_house, 'house_color', 'yellow', state)
-    else:
-        return einstein.propose_link('house_color', 'yellow', 'sport', 'hockey', state)
+    return the_person_who_is('house_color', 'yellow', 'sport', 'hockey', state)
 
 def rule8(state):
     """The man living in the house right in the center drinks milk."""
