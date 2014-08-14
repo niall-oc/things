@@ -68,7 +68,14 @@ def rule6(state):
 
 def rule7(state):
     """The owner of the yellow house plays hockey."""
-    return einstein.propose_value('house_color', 'yellow', 'sport', 'hockey', state)
+    yellow_house = einstein.get_position('yellow', state)
+    hockey_house = einstein.get_position('hockey', state)
+    if yellow_house:
+        return einstein.assign_value(yellow_house, 'sport', 'hockey', state)
+    elif hockey_house:
+        return einstein.assign_value(yellow_house, 'house_color', 'yellow', state)
+    else:
+        return einstein.propose_value('house_color', 'yellow', 'sport', 'hockey', state)
 
 def rule8(state):
     """The man living in the house right in the center drinks milk."""
@@ -85,9 +92,9 @@ def rule10(state):
     if cat_house and baseball_house: #We have assigned these rules already
         return state
     elif cat_house: #We only know where the cat lives
-        return einstein.propose_house(einstein.next_of(cat_house), 'sport', 'baseball', state)
+        return einstein.propose_house(einstein.next_to(cat_house), 'sport', 'baseball', state)
     elif baseball_house:#we only know where the baseball lives
-        return einstein.propose_house(einstein.next_of(baseball_house), 'pet', 'cat', state)
+        return einstein.propose_house(einstein.next_to(baseball_house), 'pet', 'cat', state)
     else: #We don't know where either the baseball or cat live
         return state
 
@@ -98,9 +105,17 @@ def rule11(state):
     if horse_house and hockey_house: #We have assigned these rules already
         return state
     elif horse_house: #We only know where the horse lives
-        return einstein.propose_house(einstein.next_of(horse_house), 'sport', 'hockey', state)
+        houses = einstein.next_to(horse_house)
+        if len(houses) == 1:
+            return einstein.assign_value(houses[0], 'sport', 'hockey', state)
+        else:
+            return einstein.propose_house(einstein.next_to(horse_house), 'sport', 'hockey', state)
     elif hockey_house:#we only know where the hockey lives
-        return einstein.propose_house(einstein.next_of(hockey_house), 'pet', 'horse', state)
+        houses = einstein.next_to(hockey_house)
+        if len(houses) == 1:
+            return einstein.assign_value(houses[0], 'pet', 'horse', state)
+        else:
+            return einstein.propose_house(einstein.next_to(hockey_house), 'pet', 'horse', state)
     else: #We don't know where either the hockey or horse live
         return state
 
@@ -131,9 +146,9 @@ def rule15(state):
     if baseball_house and water_house: #We have assigned these rules already
         return state
     elif water_house: #We only know where the water lives
-        return einstein.propose_house(einstein.next_of(water_house), 'sport', 'baseball', state)
+        return einstein.propose_house(einstein.next_to(water_house), 'sport', 'baseball', state)
     elif baseball_house:#we only know where the baseball lives
-        return einstein.propose_house(einstein.next_of(baseball_house), 'drink', 'water', state)
+        return einstein.propose_house(einstein.next_to(baseball_house), 'drink', 'water', state)
     else: #We don't know where either the baseball or water live
         return state
 
