@@ -1,143 +1,258 @@
-import einstein
-from pprint import pprint
-from copy import deepcopy
+from   copy import deepcopy
+import logging
 import pdb
+import collections
 
-def rule1(state):
-    """The Brit lives in a red house."""
-    return einstein.propose_value('house_color', 'red', 'nationality', 'british', state)
+logging.basicConfig(level=logging.ERROR)
 
-def rule2(state):
-    """The Swede keeps dogs."""
-    return einstein.propose_value('nationality', 'swedish', 'pet', 'dog', state)
+house_colors =  ['red',     'green',  'blue',     'white',   'yellow']
+nationalities = ['british', 'danish', 'german',   'swedish', 'norweigen']
+drinks =        ['tea',     'coffee', 'milk',     'beer',    'water']
+sports =        ['polo',    'hockey', 'baseball', 'soccer',  'billiards']
+pets =          ['dog',     'cat',    'horse',    'bird',    'fish']
 
-def rule3(state):
-    """The Dane drinks tea."""
-    return einstein.propose_value('nationality', 'danish', 'drink', 'tea', state)
 
-def rule4(state):
-    """The green house is on the left of the white house."""
-    house = einstein.get_position('green', state)
-    if house:
-        return einstein.assign_value(einstein.left_of(house), 'house_color', 'white', state)
-    else:
-        return state
+START_STATE = collections.OrderedDict()
+START_STATE['1'] = {
+    'house_color': set(house_colors), 'nationality': set(nationalities),
+    'drink': set(drinks), 'sport': set(sports), 'pet': set(pets)
+}
+START_STATE['2'] = {
+    'house_color': set(house_colors), 'nationality': set(nationalities),
+    'drink': set(drinks), 'sport': set(sports), 'pet': set(pets)
+}
+START_STATE['3'] = {
+    'house_color': set(house_colors), 'nationality': set(nationalities),
+    'drink': set(drinks), 'sport': set(sports), 'pet': set(pets)
+}
+START_STATE['4'] = {
+    'house_color': set(house_colors), 'nationality': set(nationalities),
+    'drink': set(drinks), 'sport': set(sports), 'pet': set(pets)
+}
+START_STATE['5'] = {
+    'house_color': set(house_colors), 'nationality': set(nationalities),
+    'drink': set(drinks), 'sport': set(sports), 'pet': set(pets)
+} 
+        
 
-def rule5(state):
+class StateError(Exception):
+    pass
+
+
+
+def print_solution(state):
     """
-    The green house owner drinks coffee."""
-    house = einstein.get_position('green', state)
-    if house:
-        return einstein.assign_value(house, 'drink', 'coffee', state)
-    else:
-        return state
-
-def rule6(state):
-    """The person who plays polo rears birds."""
-    return einstein.propose_value('sport', 'polo', 'pet', 'bird', state)
-
-def rule7(state):
-    """The owner of the yellow house plays hockey."""
-    return einstein.propose_value('house_color', 'yellow', 'sport', 'hockey', state)
-
-def rule8(state):
-    """The man living in the house right in the center drinks milk."""
-    return einstein.assign_value('3', 'drink', 'milk', state)
+    A very simple print function to show the current solution .
     
-def rule9(state):
-    """The Norwegian lives in the first house."""
-    return einstein.assign_value('1', 'nationality', 'norweigen', state)
-
-def rule10(state):
-    """The man who plays baseball lives next to the man who keeps cats."""
-    baseball_house = einstein.get_position('baseball', state)
-    cat_house = einstein.get_position('cat', state)
-    if cat_house and baseball_house: #We have assigned these rules already
-        return state
-    elif cat_house: #We only know where the cat lives
-        return einstein.propose_house(einstein.next_of(cat_house), 'sport', 'baseball', state)
-    elif baseball_house:#we only know where the baseball lives
-        return einstein.propose_house(einstein.next_of(baseball_house), 'pet', 'cat', state)
-    else: #We don't know where either the baseball or cat live
-        return state
-
-def rule11(state):
-    """The man who keeps horses lives next to the one who plays hockey."""
-    hockey_house = einstein.get_position('hockey', state)
-    horse_house = einstein.get_position('horse', state)
-    if horse_house and hockey_house: #We have assigned these rules already
-        return state
-    elif horse_house: #We only know where the horse lives
-        return einstein.propose_house(einstein.next_of(horse_house), 'sport', 'hockey', state)
-    elif hockey_house:#we only know where the hockey lives
-        return einstein.propose_house(einstein.next_of(hockey_house), 'pet', 'horse', state)
-    else: #We don't know where either the hockey or horse live
-        return state
-
-def rule12(state):
-    """The man who plays billiards drinks beer."""
-    return einstein.propose_value('sport', 'billiards', 'drink', 'beer', state)
-
-def rule13(state):
-    """The German plays soccer."""
-    return einstein.propose_value('nationality', 'german', 'sport', 'soccer', state)
-
-def rule14(state):
-    """The Norwegian lives next to the blue house."""
-    norweigen = einstein.get_position('norweigen', state)
-    if not norweigen:
-        return state
-    else:
-        houses = einstein.next_to(norweigen)
-        if len(houses) == 1:
-            return einstein.assign_value('2', 'house_color', 'blue', state)
-        else:
-            return einstein.propose_house(houses, 'house_color', 'blue', state)
-
-def rule15(state):
-    """The man who plays baseball has a neighbor who drinks water."""
-    baseball_house = einstein.get_position('baseball', state)
-    water_house = einstein.get_position('water', state)
-    if baseball_house and water_house: #We have assigned these rules already
-        return state
-    elif water_house: #We only know where the water lives
-        return einstein.propose_house(einstein.next_of(water_house), 'sport', 'baseball', state)
-    elif baseball_house:#we only know where the baseball lives
-        return einstein.propose_house(einstein.next_of(baseball_house), 'drink', 'water', state)
-    else: #We don't know where either the baseball or water live
-        return state
-
-def solve(current_state):
+    :param dict state: The state of the world.
     """
+    def pad_values(state):
+        """ Specific padding for printing """
+        for house, properties in new_state.iteritems(): # In this house
+            for property, values in properties.iteritems(): # Examine the properties
+                for padder in ('....', '...', '..', '.'):
+                    if len(values) < 5:
+                        values.add(padder)
+                    
+    print '\n\n'
+    row = "{0:13s} | {1:13s}| {2:13s}| {3:13s}| {4:13s}| {5:13s}|"
+    spacer = "{0}|{0}|{0}|{0}|{0}|{0}|".format('--------------')
+    new_state = deepcopy(state)
+    pad_values(new_state)
+    
+    get_property = lambda ps: ps.pop()
+    
+    def print_row(title, property):
+        print row.format(
+            title,
+            get_property(new_state['1'][property]),
+            get_property(new_state['2'][property]),
+            get_property(new_state['3'][property]),
+            get_property(new_state['4'][property]),
+            get_property(new_state['5'][property])
+        )
+        
+    print spacer
+    for property in ('house_color', 'nationality', 'drink', 'sport', 'pet',):
+        print_row(property, property)
+        print_row('', property)
+        print_row('', property)
+        print_row('', property)
+        print_row('', property)
+        print spacer
 
+def remove_value(position, property, value, state):
     """
-    rule_list = [
-        rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8,
-        rule9, rule10, rule11, rule12, rule13, rule14, rule15
-    ]
-    for p_iter in xrange(100):
-        pre_rules_state = current_state
-        
-        for rule in rule_list:
-            old_state = current_state
-            current_state = einstein.elimination_sweep(rule(current_state))
-            
-            if current_state != old_state: #something happened
-                print '{0} changed state during iteration {1}'.format(rule.__doc__, p_iter)
-                
-            if einstein.end_solution(current_state):
-                return current_state, p_iter
-                
-        if current_state == pre_rules_state: #nothing happened
-            return current_state, p_iter
-        else:
-            einstein.print_solution(current_state)
-            
-    return current_state, p_iter
-        
-           
+    Remove a value from a houses property set.
 
-if __name__ == '__main__':
-    state = deepcopy(einstein.START_STATE)
-    state, puzzle_iteration = solve(state)
-    print "Stopped at iteration {0}".format(puzzle_iteration)
+    :param str position: The key in the state dictionary identifying the house.
+    :param str property: The property in state[position] being updated.
+    :param str value: value is assigned to state[position][property].
+    :param dict state: The current state of the world.
+    :return dict: The new state of world.
+    """
+    new_state = deepcopy(state)
+    try:
+        new_state[position][property].remove(value)
+        logging.info('house %s, %s removed %s', position, property, value)
+    except KeyError:
+        #logging.warning("Value %s can't be removed from %s", value, property)
+        pass
+    finally:
+        if not new_state[position][property]:
+            raise StateError("House %s, %s no values left!", position, property)
+    return new_state
+
+def assign_value(position, property, value, state):
+    """
+    Updates a house's property to be a single value.  
+    Eliminates that value from the same property set in other houses.
+    
+     - The norweigen lives in the first house.
+    
+    Therefore he cannot live in any other houses.
+
+    :param str position: The key in the state dictionary identifying the house.
+    :param str property: The property in state[position] being updated.
+    :param str value: value is assigned to state[position][property].
+    :param dict state: The current state of the world.
+    :return dict: The new state of world.
+    """
+    new_state = deepcopy(state)
+    logging.debug('house %s, %s = %s', position, property, value)
+    new_state[position][property] = set([value])
+    for house, details in new_state.iteritems():
+        if house != position:
+            new_state = remove_value(house, property, value, new_state)
+    return new_state
+
+def get_position(value, state):
+    """
+    Return the house where a specific value has been assigned to a property.
+    Assignment is true when that value is the only member of the set of possible
+    values for that property.
+
+    :param str value: The value you are searching for.
+    :param dict state: The current state of the universe.
+    :return str or None: The key representing the house or None.
+    """
+    for house, properties in state.iteritems():
+        for property, values in properties.iteritems():
+            if value in values and len(values) == 1:
+                return house
+    return None
+
+def left_of(house):
+    """
+    Find the house to the left of this house.
+    
+    :param str house: the key of the house we are looking at.
+    """
+    left = str(int(house)-1)
+    return left if left in START_STATE.keys() else None
+
+def right_of(house):
+    """
+    Find the house to the right of this house.
+    
+    :param str house: the key of the house we are looking at.
+    """
+    right = str(int(house)+1)
+    return right if right in START_STATE.keys() else None
+
+def next_to(house):
+    """
+    Find the houses either side of this house.
+    
+    :param str house: the key of the house we are looking at.
+    """
+    return  [h for h in (left_of(house), right_of(house),) if h]
+
+def last_man_standing(state):
+    """
+    Generator to find assigned values. There are cases where several assignments
+    leave only one posibility for a property of a house. This is the last man 
+    standing rule. Essentially this is an implicit assignment.
+
+    :param dict state: The state of the universe.
+    :return dict or None: The house or None.
+    :yield tuple: (house, property, value)
+    """
+    for house, properties in state.iteritems():
+        for property, values in properties.iteritems():
+            if len(values) == 1:
+                yield (house, property, tuple(values)[0],)
+
+def elimination_sweep(state):
+    """
+    Traverse the state and assert that anything discovered by the last man 
+    standing rule is correctly assigned.
+    
+    :param dict state: The state of the universe.
+    """
+    new_state = deepcopy(state)
+    for house, property, value in last_man_standing(state):
+        new_state = assign_value(house, property, value, new_state)
+    return new_state
+
+def propose_value(assignee_property, assignee_value, assignment_property, assignment_value, state):
+    """
+    Only the assignee can have this assignment.
+
+    If a Swede keeps a bird then no one else can.
+
+    :param assignee_property: The owner property eg 'nationality'
+    :param assignee_value: The owner value eg 'Swede'
+    :param assignment_property: The assignment property eg 'pet'
+    :param assignment_value: The assignment value eg 'bird'
+    :param dict state: The state of the universe.
+    """
+    new_state = deepcopy(state)
+    for house, properties in new_state.iteritems(): # In this house
+        for property, values in properties.iteritems(): # Examine the properties
+
+            if assignee_property == property: # If the property nationality
+                if assignee_value not in values: # But its not the Swede
+                    # Then remove the bird from the set of pets in this house.
+                    new_state = remove_value(house, assignment_property, assignment_value, new_state)
+
+            if assignment_property == property: # If the property is the pet
+                if len(values) == 1: # and only one pet is set
+                    if assignment_value not in values: # and the pet is not a bird
+                        # Then the Swede cannot live in this house.
+                        new_state = remove_value(house, assignee_property, assignee_value, new_state)
+    return new_state
+
+def propose_house(positions, property, value, state):
+    """
+    Proposing a specific house has a property means no other house can have it.
+    
+     - The house nest to the green house is white.
+    
+    This means we should ensure white remains in the house_color set for any
+    house nest to the green one.
+    And ensure white is removed from all other house_color sets.
+
+    :param list positions: Keys in the state dictionary identifying the house.
+    :param str property: The property in state[position] being updated.
+    :param str value: value is assigned to state[position][property].
+    :param dict state: The current state of the world.
+    :return dict: The new state of world.
+    """
+    new_state = deepcopy(state)
+    for house, properties in new_state.iteritems(): # In this house
+        if house not in positions:
+            new_state = remove_value(house, property, value, new_state)
+    return new_state
+
+def end_solution(state):
+    """
+    If every property set has only 1 value left then we have solved the puzzle.
+    
+    :param dict state: The current state of the world.
+    """
+    for house, properties in state.iteritems(): # In this house
+        for property, values in properties.iteritems(): # Examine the properties
+            if len(values) > 1:
+                return False
+    return True
