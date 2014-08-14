@@ -163,10 +163,11 @@ def solve(current_state, rule_order):
     """
     Solve the puzzle with a list of rules
     """
+    iteration = 1
     while not einstein.end_solution(current_state):
         # Safe guard to ensure a rules are being applied
         pre_rules_state = current_state
-        
+        print "######  begin iteration", iteration
         for rule in rule_order:
             old_state = current_state
             
@@ -178,12 +179,13 @@ def solve(current_state, rule_order):
             # see if any additional changes can be made    
             current_state = einstein.elimination_sweep(current_state)
             if current_state != old_state: #something happened
-                print '{0} changed state'.format(rule.__doc__)
+                print 'ELIMINATION Changed state'
                 
         # Safe guard to ensure a rules are being applied 
         if current_state == pre_rules_state: #nothing happened
             break
-    return current_state
+        iteration += 1
+    return current_state, iteration - 1
         
 if __name__ == '__main__':
     state = deepcopy(einstein.START_STATE)
@@ -191,6 +193,6 @@ if __name__ == '__main__':
         rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8,
         rule9, rule10, rule11, rule12, rule13, rule14, rule15
     ]
-    state = solve(state, rule_order)
+    state, iteration = solve(state, rule_order)
     einstein.print_solution(state)
-    print '\n\nSolved: {0}'.format(einstein.end_solution(state))
+    print '\n\nSolved: {0} on iteration {1}'.format(einstein.end_solution(state), iteration)
