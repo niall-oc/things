@@ -1,11 +1,11 @@
 import einstein
 from copy import deepcopy
 
-def the_person_who_is(predicate, is_this, new_predicate, assign_this, state):
+def the_person_who_is(predicate, with_this, new_predicate, assign_this, state):
     """
     If the person matches a predicate then assing another predicate.
     
-    eg.  the brit lives in a red house.
+    eg.  The brit lives in a red house.
     
     If you find a brit assign the house red.
     Else if you find a red house assign the brit.
@@ -14,19 +14,55 @@ def the_person_who_is(predicate, is_this, new_predicate, assign_this, state):
         If a house has no red possibilities remove british.
         
     :param str predicate: The predicate we are looking for.
-    :param str is_this: Value to search with.
+    :param str with_this: Value to search with.
     :param str predicate: The predicate we will asign.
     :param str assign_this: Value to assign.
     :param dict state: The current state of the universe.
     """
-    house_is_this = einstein.get_position(is_this, state)
+    house_is_this = einstein.get_position(with_this, state)
     house_assigned_this = einstein.get_position(assign_this, state)
     if house_is_this:
         return einstein.assign_value(house_is_this, new_predicate , assign_this, state)
     elif house_assigned_this:
-        return einstein.assign_value(house_assigned_this, predicate, is_this, state)
+        return einstein.assign_value(house_assigned_this, predicate, with_this, state)
     else:
-        return einstein.propose_link(predicate, is_this, new_predicate, assign_this, state)
+        return einstein.propose_link(predicate, with_this, new_predicate, assign_this, state)
+
+def the_neighbour_of(predicate, with_this, new_predicate, can_have_this, state):
+    """
+    If the house contains a predicate then the neighbouring house can have
+    another predicate
+    
+    eg.  The man who keeps horses lives next to the one who plays hockey.
+    
+    If this house has horses 
+    THEN next door can have hockeybut not horses
+    AND this house cannot have hockey
+        
+    :param str predicate: The predicate we are looking for.
+    :param str with_this: Value to search with.
+    :param str predicate: The predicate we will asign.
+    :param str can_have_this: Value to the neighbour can have.
+    :param dict state: The current state of the universe.
+    """
+    found_with_this = einstein.get_position(with_this, state)
+    found_have_this = einstein.get_position(can_have_this, state)
+    if found_with_this and found_have_this: #We have assigned these rules already
+        return state
+    elif found_with_this: #We only know where the horse lives
+        houses = einstein.next_to(found_with_this)
+        if len(houses) == 1:
+            return einstein.assign_value(houses[0], new_predicate, can_have_this, state)
+        else:
+            return einstein.propose_house(houses, new_predicate, can_have_this, state)
+    elif found_have_this: #We only know where the hockey is played
+        houses = einstein.next_to(found_have_this)
+        if len(houses) == 1:
+            return einstein.assign_value(houses[0], predicate, with_this, state)
+        else:
+            return einstein.propose_house(houses, predicate, with_this, state)
+    else: #We don't know where either the hockey or horse live
+        return state
 
 def rule1(state):
     """The Brit lives in a red house."""
@@ -101,37 +137,11 @@ def rule9(state):
 
 def rule10(state):
     """The man who plays baseball lives next to the man who keeps cats."""
-    baseball_house = einstein.get_position('baseball', state)
-    cat_house = einstein.get_position('cat', state)
-    if cat_house and baseball_house: #We have assigned these rules already
-        return state
-    elif cat_house: #We only know where the cat lives
-        return einstein.propose_house(einstein.next_to(cat_house), 'sport', 'baseball', state)
-    elif baseball_house:#we only know where the baseball lives
-        return einstein.propose_house(einstein.next_to(baseball_house), 'pet', 'cat', state)
-    else: #We don't know where either the baseball or cat live
-        return state
+    return the_neighbour_of('sport', 'baseball', 'pet', 'cat', state)
 
 def rule11(state):
     """The man who keeps horses lives next to the one who plays hockey."""
-    hockey_house = einstein.get_position('hockey', state)
-    horse_house = einstein.get_position('horse', state)
-    if horse_house and hockey_house: #We have assigned these rules already
-        return state
-    elif horse_house: #We only know where the horse lives
-        houses = einstein.next_to(horse_house)
-        if len(houses) == 1:
-            return einstein.assign_value(houses[0], 'sport', 'hockey', state)
-        else:
-            return einstein.propose_house(einstein.next_to(horse_house), 'sport', 'hockey', state)
-    elif hockey_house:#we only know where the hockey lives
-        houses = einstein.next_to(hockey_house)
-        if len(houses) == 1:
-            return einstein.assign_value(houses[0], 'pet', 'horse', state)
-        else:
-            return einstein.propose_house(einstein.next_to(hockey_house), 'pet', 'horse', state)
-    else: #We don't know where either the hockey or horse live
-        return state
+    return the_neighbour_of('pet', 'horse', 'sport', 'hockey', state)
 
 def rule12(state):
     """The man who plays billiards drinks beer."""
@@ -155,16 +165,7 @@ def rule14(state):
 
 def rule15(state):
     """The man who plays baseball has a neighbor who drinks water."""
-    baseball_house = einstein.get_position('baseball', state)
-    water_house = einstein.get_position('water', state)
-    if baseball_house and water_house: #We have assigned these rules already
-        return state
-    elif water_house: #We only know where the water lives
-        return einstein.propose_house(einstein.next_to(water_house), 'sport', 'baseball', state)
-    elif baseball_house:#we only know where the baseball lives
-        return einstein.propose_house(einstein.next_to(baseball_house), 'drink', 'water', state)
-    else: #We don't know where either the baseball or water live
-        return state
+    return the_neighbour_of('sport', 'baseball', 'drink', 'water', state)
 
 def solve(current_state):
     """
