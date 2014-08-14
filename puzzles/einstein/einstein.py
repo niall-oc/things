@@ -2,7 +2,7 @@ from   copy import deepcopy
 import logging
 import collections
 
-logging.basicConfig(level=logging.ERROR)
+logging.basicConfig(level=logging.INFO, file="op_log.txt")
 
 house_colors =  ['red',     'green',  'blue',     'white',   'yellow']
 nationalities = ['british', 'danish', 'german',   'swedish', 'norweigen']
@@ -36,7 +36,6 @@ START_STATE['5'] = {
 
 class StateError(Exception):
     pass
-
 
 
 def print_solution(state):
@@ -93,7 +92,7 @@ def remove_value(position, property, value, state):
     new_state = deepcopy(state)
     try:
         new_state[position][property].remove(value)
-        logging.info('house %s, %s removed %s', position, property, value)
+        logging.info('Removed %s %s from house %s', property, value, position)
     except KeyError:
         #logging.warning("Value %s can't be removed from %s", value, property)
         pass
@@ -118,7 +117,7 @@ def assign_value(position, property, value, state):
     :return dict: The new state of world.
     """
     new_state = deepcopy(state)
-    logging.debug('house %s, %s = %s', position, property, value)
+    logging.debug('Assigned %s %s to house %s', property, value, position)
     new_state[position][property] = set([value])
     for house, details in new_state.iteritems():
         if house != position:
@@ -177,10 +176,16 @@ def last_man_standing(state):
     :return dict or None: The house or None.
     :yield tuple: (house, property, value)
     """
-    for house, properties in state.iteritems():
-        for property, values in properties.iteritems():
-            if len(values) == 1:
-                yield (house, property, tuple(values)[0],)
+    for house in state.keys(): # look throughe the houses
+        for property, values in state[house].iteritems(): # and properties
+            if len(values) == 1: # if a last man standing is found
+                in_other_house = False # Assume its not in another house
+                val = tuple(values)[0]
+                for other in [k for k in state.keys() if k != house]:
+                    if val in other: # Try to break the assumption
+                        in_other_house = True
+                if not in_other_house: # self explanitary :-)
+                    yield (house, property, tuple(values)[0],)
 
 def elimination_sweep(state):
     """
