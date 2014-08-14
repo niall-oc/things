@@ -153,15 +153,7 @@ def rule13(state):
 
 def rule14(state):
     """The Norwegian lives next to the blue house."""
-    norweigen = einstein.get_position('norweigen', state)
-    if not norweigen:
-        return state
-    else:
-        houses = einstein.next_to(norweigen)
-        if len(houses) == 1:
-            return einstein.assign_value('2', 'house_color', 'blue', state)
-        else:
-            return einstein.propose_house(houses, 'house_color', 'blue', state)
+    return the_neighbour_of('nationality', 'norweigen', 'house_color', 'blue', state)
 
 def rule15(state):
     """The man who plays baseball has a neighbor who drinks water."""
