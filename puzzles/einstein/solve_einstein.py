@@ -21,7 +21,9 @@ def the_person_who_is(predicate, with_this, new_predicate, assign_this, state):
     """
     house_is_this = einstein.get_position(with_this, state)
     house_assigned_this = einstein.get_position(assign_this, state)
-    if house_is_this:
+    if house_is_this and house_assigned_this:
+        return state
+    elif house_is_this:
         return einstein.assign_value(house_is_this, new_predicate , assign_this, state)
     elif house_assigned_this:
         return einstein.assign_value(house_assigned_this, predicate, with_this, state)
@@ -129,11 +131,17 @@ def rule7(state):
 
 def rule8(state):
     """The man living in the house right in the center drinks milk."""
-    return einstein.assign_value('3', 'drink', 'milk', state)
+    if einstein.get_position('milk', state): # Don't set twice
+        return state
+    else:
+        return einstein.assign_value('3', 'drink', 'milk', state)
     
 def rule9(state):
     """The Norwegian lives in the first house."""
-    return einstein.assign_value('1', 'nationality', 'norweigen', state)
+    if einstein.get_position('norweigen', state): # Don't set twice
+        return state
+    else:
+        return einstein.assign_value('1', 'nationality', 'norweigen', state)
 
 def rule10(state):
     """The man who plays baseball lives next to the man who keeps cats."""
