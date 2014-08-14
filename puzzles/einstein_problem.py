@@ -44,12 +44,13 @@ def print_state(new_state):
 def remove_value(house, property, value, state):
     """
     Remove a value from a houses property set.
-    THIS AFFECTS STATE!
 
     :param str house: The key in the state dictionary identifying the house.
     :param str property: The property state[house_position] that will be updated.
     :param str value: The value at state[house_position][property] that will be updated.
     :param dict state: The state of the world.
+    
+    :return dict: Updates state of the universe
     """
     new_state = deepcopy(state)
     try:
