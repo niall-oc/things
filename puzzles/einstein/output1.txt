@@ -1,95 +1,130 @@
-niall@xual:~/Software/things$ python solve_einstein.py 
 ######  begin iteration 1
-The green house is on the left of the white house. changed state
-ELIMINATION Changed state
-The man living in the house right in the center drinks milk. changed state
-ELIMINATION Changed state
-The Norwegian lives in the first house. changed state
-ELIMINATION Changed state
-The man who plays billiards drinks beer. changed state
-ELIMINATION Changed state
-The German plays soccer. changed state
-ELIMINATION Changed state
-The Norwegian lives next to the blue house. changed state
-ELIMINATION Changed state
+Removed house_color white from house 1
+Removed house_color green from house 5
+RULE The green house is on the left of the white house. changed state
+Assigned drink milk to house 3
+Removed drink milk from house 1
+Removed drink milk from house 2
+Removed drink milk from house 4
+Removed drink milk from house 5
+RULE The man living in the house right in the center drinks milk. changed state
+Assigned nationality norweigen to house 1
+Removed nationality norweigen from house 2
+Removed nationality norweigen from house 3
+Removed nationality norweigen from house 4
+Removed nationality norweigen from house 5
+RULE The Norwegian lives in the first house. changed state
+Removed sport billiards from house 3
+RULE The man who plays billiards drinks beer. changed state
+Removed sport soccer from house 1
+RULE The German plays soccer. changed state
+Assigned house_color blue to house 2
+Removed house_color blue from house 1
+Removed house_color blue from house 3
+Removed house_color blue from house 4
+Removed house_color blue from house 5
+RULE The Norwegian lives next to the blue house. changed state
 ######  begin iteration 2
-The Brit lives in a red house. changed state
-ELIMINATION Changed state
-The Swede keeps dogs. changed state
-ELIMINATION Changed state
-The Dane drinks tea. changed state
-ELIMINATION Changed state
-The green house is on the left of the white house. changed state
-ELIMINATION Changed state
-The green house owner drinks coffee. changed state
-ELIMINATION Changed state
-ELIMINATION Changed state
-The owner of the yellow house plays hockey. changed state
-ELIMINATION Changed state
-The man who keeps horses lives next to the one who plays hockey. changed state
-ELIMINATION Changed state
-The man who plays billiards drinks beer. changed state
-ELIMINATION Changed state
-The man who plays baseball has a neighbor who drinks water. changed state
-ELIMINATION Changed state
+Removed house_color red from house 1
+Removed nationality british from house 2
+RULE The Brit lives in a red house. changed state
+Removed pet dog from house 1
+RULE The Swede keeps dogs. changed state
+Removed drink tea from house 1
+Removed nationality danish from house 3
+RULE The Dane drinks tea. changed state
+Removed house_color green from house 1
+Removed house_color white from house 3
+RULE The green house is on the left of the white house. changed state
+Removed drink coffee from house 1
+Removed drink coffee from house 2
+Removed house_color green from house 3
+RULE The green house owner drinks coffee. changed state
+Assigned sport hockey to house 1
+Removed sport hockey from house 2
+Removed sport hockey from house 3
+Removed sport hockey from house 4
+Removed sport hockey from house 5
+RULE The owner of the yellow house plays hockey. changed state
+Assigned drink milk to house 3
+Assigned nationality norweigen to house 1
+Assigned pet horse to house 2
+Removed pet horse from house 1
+Removed pet horse from house 3
+Removed pet horse from house 4
+Removed pet horse from house 5
+RULE The man who keeps horses lives next to the one who plays hockey. changed state
+Removed drink beer from house 1
+RULE The man who plays billiards drinks beer. changed state
+Assigned sport baseball to house 2
+Removed sport baseball from house 3
+Removed sport baseball from house 4
+Removed sport baseball from house 5
+RULE The man who plays baseball has a neighbor who drinks water. changed state
 ######  begin iteration 3
-The Brit lives in a red house. changed state
-ELIMINATION Changed state
-The Swede keeps dogs. changed state
-ELIMINATION Changed state
-The green house owner drinks coffee. changed state
-ELIMINATION Changed state
-The person who plays polo rears birds. changed state
-ELIMINATION Changed state
-The man who plays baseball lives next to the man who keeps cats. changed state
-ELIMINATION Changed state
-The man who plays billiards drinks beer. changed state
-ELIMINATION Changed state
-The German plays soccer. changed state
-ELIMINATION Changed state
-ELIMINATION Changed state
+Removed nationality swedish from house 2
+RULE The Swede keeps dogs. changed state
+Removed house_color white from house 4
+RULE The green house is on the left of the white house. changed state
+Removed pet bird from house 1
+RULE The person who plays polo rears birds. changed state
+Assigned sport hockey to house 1
+Assigned drink milk to house 3
+Assigned nationality norweigen to house 1
+Removed pet cat from house 4
+Removed pet cat from house 5
+RULE The man who plays baseball lives next to the man who keeps cats. changed state
+Removed drink beer from house 2
+RULE The man who plays billiards drinks beer. changed state
+Removed nationality german from house 2
+RULE The German plays soccer. changed state
 ######  begin iteration 4
-The person who plays polo rears birds. changed state
-ELIMINATION Changed state
-The German plays soccer. changed state
-ELIMINATION Changed state
+Assigned drink tea to house 2
+Removed drink tea from house 4
+Removed drink tea from house 5
+RULE The Dane drinks tea. changed state
+Assigned sport hockey to house 1
+Assigned drink milk to house 3
+Assigned nationality norweigen to house 1
 ######  begin iteration 5
-The Swede keeps dogs. changed state
-ELIMINATION Changed state
+Assigned drink tea to house 2
+Assigned sport hockey to house 1
+Assigned drink milk to house 3
+Assigned nationality norweigen to house 1
 
 
 
 --------------|--------------|--------------|--------------|--------------|--------------|
 house_color   | ...          | blue         | ...          | ....         | ...          |
-              | ....         | ...          | ....         | .            | white        |
-              | ..           | ....         | ..           | green        | ....         |
-              | yellow       | ..           | red          | ..           | ..           |
-              | .            | .            | .            | ...          | .            |
+              | ....         | ...          | ..           | green        | white        |
+              | ..           | ....         | ....         | red          | ....         |
+              | yellow       | ..           | red          | yellow       | red          |
+              | .            | .            | yellow       | ...          | yellow       |
 --------------|--------------|--------------|--------------|--------------|--------------|
-nationality   | norweigen    | danish       | ...          | german       | swedish      |
-              | .            | .            | ....         | ...          | ...          |
-              | ....         | ....         | ..           | ....         | ....         |
-              | ..           | ..           | british      | ..           | ..           |
-              | ...          | ...          | .            | .            | .            |
+nationality   | norweigen    | danish       | german       | german       | german       |
+              | .            | .            | swedish      | danish       | danish       |
+              | ....         | ....         | ....         | swedish      | swedish      |
+              | ..           | ..           | british      | ....         | ....         |
+              | ...          | ...          | ...          | british      | british      |
 --------------|--------------|--------------|--------------|--------------|--------------|
-drink         | water        | tea          | ...          | ...          | ...          |
-              | ...          | .            | ....         | coffee       | beer         |
-              | ....         | ....         | milk         | ....         | ....         |
-              | ..           | ..           | ..           | ..           | ..           |
-              | .            | ...          | .            | .            | .            |
+drink         | water        | tea          | ...          | water        | water        |
+              | ...          | .            | ....         | ...          | ...          |
+              | ....         | ....         | milk         | coffee       | coffee       |
+              | ..           | ..           | ..           | ....         | ....         |
+              | .            | ...          | .            | beer         | beer         |
 --------------|--------------|--------------|--------------|--------------|--------------|
-sport         | ...          | ....         | polo         | ...          | ...          |
-              | ....         | .            | ...          | soccer       | billiards    |
-              | hockey       | baseball     | ....         | ....         | ....         |
-              | ..           | ..           | ..           | ..           | ..           |
-              | .            | ...          | .            | .            | .            |
+sport         | ...          | ....         | polo         | polo         | polo         |
+              | ....         | .            | ...          | ...          | ...          |
+              | hockey       | baseball     | soccer       | soccer       | soccer       |
+              | ..           | ..           | ....         | ....         | ....         |
+              | .            | ...          | ..           | billiards    | billiards    |
 --------------|--------------|--------------|--------------|--------------|--------------|
-pet           | ...          | ...          | ...          | ...          | ...          |
-              | .            | horse        | ....         | fish         | ....         |
-              | ....         | ....         | bird         | ....         | dog          |
-              | ..           | ..           | ..           | ..           | ..           |
-              | cat          | .            | .            | .            | .            |
+pet           | ...          | ...          | fish         | ...          | ...          |
+              | fish         | horse        | cat          | fish         | fish         |
+              | ....         | ....         | ....         | ....         | ....         |
+              | ..           | ..           | dog          | dog          | bird         |
+              | cat          | .            | bird         | bird         | dog          |
 --------------|--------------|--------------|--------------|--------------|--------------|
 
 
-Solved: True on iteration 5
+Solved: False on iteration 4
