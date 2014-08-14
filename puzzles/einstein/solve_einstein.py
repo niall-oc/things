@@ -1,6 +1,7 @@
 import einstein
 from pprint import pprint
 from copy import deepcopy
+import pdb
 
 def rule1(state):
     """
@@ -18,7 +19,7 @@ def rule3(state):
     """
     The Dane drinks tea.
     """
-    return einstein.propose_value('nationality', 'dane', 'drink', 'tea', state)
+    return einstein.propose_value('nationality', 'danish', 'drink', 'tea', state)
 
 def rule4(state):
     """
@@ -70,13 +71,13 @@ def rule10(state):
     """
     baseball_house = einstein.get_position('baseball', state)
     cat_house = einstein.get_position('cat', state)
-    if cat_house and baseball_house: # We have assigned these rules already
+    if cat_house and baseball_house: #We have assigned these rules already
         return state
-    elif cat_house: # We only know where the cat lives
+    elif cat_house: #We only know where the cat lives
         return einstein.propose_house(einstein.next_of(cat_house), 'sport', 'baseball', state)
-    elif baseball_house:# we only know where the baseball lives
+    elif baseball_house:#we only know where the baseball lives
         return einstein.propose_house(einstein.next_of(baseball_house), 'pet', 'cat', state)
-    else: # We don't know where either the baseball or cat live
+    else: #We don't know where either the baseball or cat live
         return state
 
 def rule11(state):
@@ -85,13 +86,13 @@ def rule11(state):
     """
     hockey_house = einstein.get_position('hockey', state)
     horse_house = einstein.get_position('horse', state)
-    if horse_house and hockey_house: # We have assigned these rules already
+    if horse_house and hockey_house: #We have assigned these rules already
         return state
-    elif horse_house: # We only know where the horse lives
+    elif horse_house: #We only know where the horse lives
         return einstein.propose_house(einstein.next_of(horse_house), 'sport', 'hockey', state)
-    elif hockey_house:# we only know where the hockey lives
+    elif hockey_house:#we only know where the hockey lives
         return einstein.propose_house(einstein.next_of(hockey_house), 'pet', 'horse', state)
-    else: # We don't know where either the hockey or horse live
+    else: #We don't know where either the hockey or horse live
         return state
 
 def rule12(state):
@@ -126,16 +127,16 @@ def rule15(state):
     """
     baseball_house = einstein.get_position('baseball', state)
     water_house = einstein.get_position('water', state)
-    if baseball_house and water_house: # We have assigned these rules already
+    if baseball_house and water_house: #We have assigned these rules already
         return state
-    elif water_house: # We only know where the water lives
+    elif water_house: #We only know where the water lives
         return einstein.propose_house(einstein.next_of(water_house), 'sport', 'baseball', state)
-    elif baseball_house:# we only know where the baseball lives
+    elif baseball_house:#we only know where the baseball lives
         return einstein.propose_house(einstein.next_of(baseball_house), 'drink', 'water', state)
-    else: # We don't know where either the baseball or water live
+    else: #We don't know where either the baseball or water live
         return state
 
-def solve(state):
+def solve(current_state):
     """
 
     """
@@ -143,12 +144,23 @@ def solve(state):
         rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8,
         rule9, rule10, rule11, rule12, rule13, rule14, rule15
     ]
-    for puzzle_iteration in xrange(100):
+    for p_iter in xrange(100):
+        pre_rules_state = current_state
+        
         for rule in rule_list:
-            state = einstein.elimination_sweep(rule(state))
-            if einstein.end_solution(state):
-                return state, puzzle_iteration
-    return state, puzzle_iteration
+            old_state = current_state
+            current_state = einstein.elimination_sweep(rule(current_state))
+            
+            if current_state != old_state: #something happened
+                print '{0} changed state during iteration {1}'.format(rule.__doc__, p_iter)
+                
+            if einstein.end_solution(current_state):
+                return current_state, p_iter
+                
+        if current_state == pre_rules_state: #nothing happened
+            return current_state, p_iter
+            
+    return current_state, p_iter
         
            
 
