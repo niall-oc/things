@@ -90,15 +90,11 @@ def remove_value(position, property, value, state):
     :return dict: The new state of world.
     """
     new_state = deepcopy(state)
-    try:
-        new_state[position][property].remove(value)
-        logging.info('Removed %s %s from house %s', property, value, position)
-    except KeyError:
-        #logging.warning("Value %s can't be removed from %s", value, property)
-        pass
-    finally:
-        if not new_state[position][property]:
-            raise StateError("House %s, %s no values left!", position, property)
+    properties = new_state[position][property] # pluck out the properties
+    if value in properties: # if the value is there remove it
+        properties.remove(value)
+    if not properties: # if the properties is empty afterwards then we have an issue
+        raise StateError("House %s, %s no values left!", position, property)
     return new_state
 
 def assign_value(position, property, value, state):
@@ -117,11 +113,12 @@ def assign_value(position, property, value, state):
     :return dict: The new state of world.
     """
     new_state = deepcopy(state)
-    logging.debug('Assigned %s %s to house %s', property, value, position)
     new_state[position][property] = set([value])
+    logging.debug('Assigned %s %s to house %s', property, value, position)
     for house, details in new_state.iteritems():
-        if house != position:
+        if house != position and value in details[property]:
             new_state = remove_value(house, property, value, new_state)
+            logging.info('Removed %s %s from house %s', property, value, house)
     return new_state
 
 def get_position(value, state):
