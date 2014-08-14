@@ -130,7 +130,6 @@ The person who plays polo rears birds. changed state during iteration 3
 The man who plays baseball lives next to the man who keeps cats. changed state during iteration 3
 The man who plays billiards drinks beer. changed state during iteration 3
 The German plays soccer. changed state during iteration 3
-The Norwegian lives next to the blue house. changed state during iteration 3
 
 
 
@@ -160,13 +159,12 @@ sport         | ...          | ....         | polo         | ...          | ... 
               | .            | ...          | .            | .            | .            |
 --------------|--------------|--------------|--------------|--------------|--------------|
 pet           | ...          | ...          | ...          | ...          | ...          |
-              | fish         | horse        | fish         | fish         | fish         |
-              | ....         | ....         | ....         | ....         | ....         |
-              | ..           | ..           | bird         | dog          | dog          |
-              | cat          | .            | cat          | ..           | ..           |
+              | fish         | horse        | ....         | fish         | fish         |
+              | ....         | ....         | bird         | ....         | ....         |
+              | ..           | ..           | ..           | dog          | dog          |
+              | cat          | .            | .            | ..           | ..           |
 --------------|--------------|--------------|--------------|--------------|--------------|
 The Swede keeps dogs. changed state during iteration 4
-The Dane drinks tea. changed state during iteration 4
 
 
 
