@@ -1,56 +1,61 @@
 niall@xual:~/Software/things$ python solve_einstein.py 
+######  begin iteration 1
 The green house is on the left of the white house. changed state
-The green house is on the left of the white house. changed state
+ELIMINATION Changed state
 The man living in the house right in the center drinks milk. changed state
-The man living in the house right in the center drinks milk. changed state
+ELIMINATION Changed state
 The Norwegian lives in the first house. changed state
-The Norwegian lives in the first house. changed state
+ELIMINATION Changed state
 The man who plays billiards drinks beer. changed state
-The man who plays billiards drinks beer. changed state
+ELIMINATION Changed state
 The German plays soccer. changed state
-The German plays soccer. changed state
+ELIMINATION Changed state
 The Norwegian lives next to the blue house. changed state
-The Norwegian lives next to the blue house. changed state
+ELIMINATION Changed state
+######  begin iteration 2
 The Brit lives in a red house. changed state
-The Brit lives in a red house. changed state
+ELIMINATION Changed state
 The Swede keeps dogs. changed state
-The Swede keeps dogs. changed state
+ELIMINATION Changed state
 The Dane drinks tea. changed state
-The Dane drinks tea. changed state
+ELIMINATION Changed state
 The green house is on the left of the white house. changed state
-The green house is on the left of the white house. changed state
+ELIMINATION Changed state
 The green house owner drinks coffee. changed state
-The green house owner drinks coffee. changed state
-The person who plays polo rears birds. changed state
+ELIMINATION Changed state
+ELIMINATION Changed state
 The owner of the yellow house plays hockey. changed state
-The owner of the yellow house plays hockey. changed state
+ELIMINATION Changed state
 The man who keeps horses lives next to the one who plays hockey. changed state
-The man who keeps horses lives next to the one who plays hockey. changed state
+ELIMINATION Changed state
 The man who plays billiards drinks beer. changed state
-The man who plays billiards drinks beer. changed state
+ELIMINATION Changed state
 The man who plays baseball has a neighbor who drinks water. changed state
-The man who plays baseball has a neighbor who drinks water. changed state
+ELIMINATION Changed state
+######  begin iteration 3
 The Brit lives in a red house. changed state
-The Brit lives in a red house. changed state
+ELIMINATION Changed state
 The Swede keeps dogs. changed state
-The Swede keeps dogs. changed state
+ELIMINATION Changed state
 The green house owner drinks coffee. changed state
-The green house owner drinks coffee. changed state
+ELIMINATION Changed state
 The person who plays polo rears birds. changed state
-The person who plays polo rears birds. changed state
+ELIMINATION Changed state
 The man who plays baseball lives next to the man who keeps cats. changed state
-The man who plays baseball lives next to the man who keeps cats. changed state
+ELIMINATION Changed state
 The man who plays billiards drinks beer. changed state
-The man who plays billiards drinks beer. changed state
+ELIMINATION Changed state
 The German plays soccer. changed state
-The German plays soccer. changed state
-The Norwegian lives next to the blue house. changed state
+ELIMINATION Changed state
+ELIMINATION Changed state
+######  begin iteration 4
 The person who plays polo rears birds. changed state
-The person who plays polo rears birds. changed state
+ELIMINATION Changed state
 The German plays soccer. changed state
-The German plays soccer. changed state
+ELIMINATION Changed state
+######  begin iteration 5
 The Swede keeps dogs. changed state
-The Swede keeps dogs. changed state
+ELIMINATION Changed state
 
 
 
@@ -87,4 +92,4 @@ pet           | ...          | ...          | ...          | ...          | ... 
 --------------|--------------|--------------|--------------|--------------|--------------|
 
 
-Solved: True
+Solved: True on iteration 5
