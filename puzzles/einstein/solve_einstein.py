@@ -104,13 +104,13 @@ def rule4(state):
             if house_to_right:
                 has_green = 'green' in state[house]['house_color']
                 white_to_right = 'white' in state[house_to_right]['house_color']
-                # If this house has green in its color list
-                # AND this house is NOT left of a white house
+                # If this house_color is green
+                # BUT the house on the right is not white
                 # THEN green must be removed from this house
                 if has_green and not white_to_right:
                     state = einstein.remove_value(house, 'house_color', 'green', state)
-                # If this house DOES NOT have green in its color list
-                # THEN the house to thr right cannot have white
+                # If this house is NOT green
+                # THEN the house to the right cannot be white
                 elif not has_green and white_to_right:
                     state = einstein.remove_value(house_to_right, 'house_color', 'white', state)
         return state            
