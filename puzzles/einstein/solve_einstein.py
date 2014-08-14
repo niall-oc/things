@@ -191,5 +191,6 @@ if __name__ == '__main__':
         rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8,
         rule9, rule10, rule11, rule12, rule13, rule14, rule15
     ]
-    einstein.print_solution(solve(state, rule_order))
-    print '\n\nSolved: {0}'.format(einstein.end_solution(current_state))
+    state = solve(state, rule_order)
+    einstein.print_solution(state)
+    print '\n\nSolved: {0}'.format(einstein.end_solution(state))
