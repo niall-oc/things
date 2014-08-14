@@ -1,4 +1,5 @@
 niall@xual:~/Software/things$ python solve_einstein.py 
+The green house is on the left of the white house. changed state during iteration 0
 The man living in the house right in the center drinks milk. changed state during iteration 0
 The Norwegian lives in the first house. changed state during iteration 0
 The man who plays billiards drinks beer. changed state during iteration 0
@@ -8,11 +9,11 @@ The Norwegian lives next to the blue house. changed state during iteration 0
 
 
 --------------|--------------|--------------|--------------|--------------|--------------|
-house_color   | ....         | blue         | ....         | ....         | ....         |
-              | white        | ...          | white        | white        | white        |
-              | green        | ....         | green        | green        | green        |
-              | yellow       | ..           | yellow       | yellow       | yellow       |
-              | red          | .            | red          | red          | red          |
+house_color   | ....         | blue         | ....         | ....         | ...          |
+              | green        | ...          | white        | white        | white        |
+              | red          | ....         | green        | green        | ....         |
+              | yellow       | ..           | red          | red          | red          |
+              | ...          | .            | yellow       | yellow       | yellow       |
 --------------|--------------|--------------|--------------|--------------|--------------|
 nationality   | norweigen    | german       | german       | german       | german       |
               | .            | danish       | danish       | danish       | danish       |
@@ -33,24 +34,27 @@ sport         | polo         | polo         | polo         | polo         | polo
               | hockey       | billiards    | hockey       | billiards    | billiards    |
 --------------|--------------|--------------|--------------|--------------|--------------|
 pet           | horse        | horse        | horse        | horse        | horse        |
-              | dog          | dog          | dog          | dog          | dog          |
+              | cat          | cat          | cat          | cat          | cat          |
               | bird         | bird         | bird         | bird         | bird         |
               | fish         | fish         | fish         | fish         | fish         |
-              | cat          | cat          | cat          | cat          | cat          |
+              | dog          | dog          | dog          | dog          | dog          |
 --------------|--------------|--------------|--------------|--------------|--------------|
 The Brit lives in a red house. changed state during iteration 1
 The Swede keeps dogs. changed state during iteration 1
 The Dane drinks tea. changed state during iteration 1
+The green house is on the left of the white house. changed state during iteration 1
+The green house owner drinks coffee. changed state during iteration 1
+The person who plays polo rears birds. changed state during iteration 1
 The owner of the yellow house plays hockey. changed state during iteration 1
 
 
 
 --------------|--------------|--------------|--------------|--------------|--------------|
-house_color   | ....         | blue         | ....         | ....         | ....         |
-              | white        | ...          | white        | white        | white        |
-              | green        | ....         | green        | green        | green        |
-              | yellow       | ..           | red          | red          | red          |
-              | ...          | .            | yellow       | yellow       | yellow       |
+house_color   | ...          | blue         | ...          | ....         | ...          |
+              | ....         | ...          | ....         | .            | white        |
+              | ..           | ....         | ..           | green        | ....         |
+              | yellow       | ..           | red          | ..           | ..           |
+              | .            | .            | .            | ...          | .            |
 --------------|--------------|--------------|--------------|--------------|--------------|
 nationality   | norweigen    | german       | german       | german       | german       |
               | .            | danish       | swedish      | danish       | danish       |
@@ -60,15 +64,15 @@ nationality   | norweigen    | german       | german       | german       | germ
 --------------|--------------|--------------|--------------|--------------|--------------|
 drink         | water        | water        | ...          | water        | water        |
               | ...          | tea          | ....         | tea          | tea          |
-              | coffee       | coffee       | milk         | coffee       | coffee       |
+              | beer         | beer         | milk         | coffee       | coffee       |
               | ....         | ....         | ..           | ....         | ....         |
-              | beer         | beer         | .            | beer         | beer         |
+              | ..           | ...          | .            | beer         | beer         |
 --------------|--------------|--------------|--------------|--------------|--------------|
 sport         | polo         | polo         | polo         | polo         | polo         |
-              | ....         | ....         | ....         | soccer       | soccer       |
-              | billiards    | soccer       | soccer       | baseball     | baseball     |
-              | baseball     | baseball     | baseball     | hockey       | hockey       |
-              | hockey       | billiards    | hockey       | billiards    | billiards    |
+              | ....         | ....         | ....         | ....         | ....         |
+              | billiards    | soccer       | soccer       | soccer       | soccer       |
+              | baseball     | baseball     | baseball     | baseball     | baseball     |
+              | hockey       | billiards    | ...          | billiards    | billiards    |
 --------------|--------------|--------------|--------------|--------------|--------------|
 pet           | horse        | horse        | horse        | horse        | horse        |
               | ....         | cat          | cat          | cat          | cat          |
@@ -76,4 +80,76 @@ pet           | horse        | horse        | horse        | horse        | hors
               | fish         | fish         | fish         | fish         | fish         |
               | cat          | dog          | dog          | dog          | dog          |
 --------------|--------------|--------------|--------------|--------------|--------------|
-Stopped at iteration 2
+The Brit lives in a red house. changed state during iteration 2
+The green house owner drinks coffee. changed state during iteration 2
+The man who plays billiards drinks beer. changed state during iteration 2
+
+
+
+--------------|--------------|--------------|--------------|--------------|--------------|
+house_color   | ...          | blue         | ...          | ....         | ...          |
+              | ....         | ...          | ....         | .            | white        |
+              | ..           | ....         | ..           | green        | ....         |
+              | yellow       | ..           | red          | ..           | ..           |
+              | .            | .            | .            | ...          | .            |
+--------------|--------------|--------------|--------------|--------------|--------------|
+nationality   | norweigen    | german       | german       | german       | german       |
+              | .            | danish       | swedish      | danish       | danish       |
+              | ....         | swedish      | ....         | swedish      | swedish      |
+              | ..           | ....         | british      | ....         | ....         |
+              | ...          | ...          | ...          | ...          | ...          |
+--------------|--------------|--------------|--------------|--------------|--------------|
+drink         | water        | water        | ...          | ...          | water        |
+              | ...          | tea          | ....         | coffee       | tea          |
+              | beer         | beer         | milk         | ....         | beer         |
+              | ....         | ....         | ..           | ..           | ....         |
+              | ..           | ...          | .            | .            | ...          |
+--------------|--------------|--------------|--------------|--------------|--------------|
+sport         | polo         | polo         | polo         | polo         | polo         |
+              | ....         | ....         | ....         | ....         | ....         |
+              | billiards    | soccer       | soccer       | soccer       | soccer       |
+              | baseball     | baseball     | baseball     | baseball     | baseball     |
+              | hockey       | billiards    | ...          | ...          | billiards    |
+--------------|--------------|--------------|--------------|--------------|--------------|
+pet           | horse        | bird         | bird         | bird         | bird         |
+              | ....         | horse        | horse        | horse        | horse        |
+              | bird         | dog          | dog          | dog          | dog          |
+              | fish         | fish         | fish         | fish         | fish         |
+              | cat          | cat          | cat          | cat          | cat          |
+--------------|--------------|--------------|--------------|--------------|--------------|
+The Dane drinks tea. changed state during iteration 3
+
+
+
+--------------|--------------|--------------|--------------|--------------|--------------|
+house_color   | ...          | blue         | ...          | ....         | ...          |
+              | ....         | ...          | ....         | .            | white        |
+              | ..           | ....         | ..           | green        | ....         |
+              | yellow       | ..           | red          | ..           | ..           |
+              | .            | .            | .            | ...          | .            |
+--------------|--------------|--------------|--------------|--------------|--------------|
+nationality   | norweigen    | german       | german       | german       | german       |
+              | .            | danish       | swedish      | swedish      | danish       |
+              | ....         | swedish      | ....         | ....         | swedish      |
+              | ..           | ....         | british      | ..           | ....         |
+              | ...          | ...          | ...          | ...          | ...          |
+--------------|--------------|--------------|--------------|--------------|--------------|
+drink         | water        | water        | ...          | ...          | water        |
+              | ...          | tea          | ....         | coffee       | tea          |
+              | beer         | beer         | milk         | ....         | beer         |
+              | ....         | ....         | ..           | ..           | ....         |
+              | ..           | ...          | .            | .            | ...          |
+--------------|--------------|--------------|--------------|--------------|--------------|
+sport         | polo         | polo         | polo         | polo         | polo         |
+              | ....         | ....         | ....         | ....         | ....         |
+              | billiards    | soccer       | soccer       | soccer       | soccer       |
+              | baseball     | baseball     | baseball     | baseball     | baseball     |
+              | hockey       | billiards    | ...          | ...          | billiards    |
+--------------|--------------|--------------|--------------|--------------|--------------|
+pet           | horse        | horse        | horse        | horse        | horse        |
+              | ....         | cat          | cat          | cat          | cat          |
+              | bird         | bird         | bird         | bird         | bird         |
+              | fish         | fish         | fish         | fish         | fish         |
+              | cat          | dog          | dog          | dog          | dog          |
+--------------|--------------|--------------|--------------|--------------|--------------|
+Stopped at iteration 4
