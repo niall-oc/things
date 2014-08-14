@@ -5,7 +5,14 @@ import pdb
 
 def rule1(state):
     """The Brit lives in a red house."""
-    return einstein.propose_value('house_color', 'red', 'nationality', 'british', state)
+    british_house = einstein.get_position('british', state)
+    red_house = einstein.get_position('red', state)
+    if british_house:
+        return einstein.assign_value(british_house, 'house_color', 'red', state)
+    elif red_house:
+        return einstein.assign_value(red_house, 'nationality', 'british', state)
+    else:
+        return einstein.propose_value('house_color', 'red', 'nationality', 'british', state)
 
 def rule2(state):
     """The Swede keeps dogs."""
