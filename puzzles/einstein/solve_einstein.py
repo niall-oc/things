@@ -1,7 +1,5 @@
 import einstein
-from pprint import pprint
 from copy import deepcopy
-import pdb
 
 def rule1(state):
     """The Brit lives in a red house."""
@@ -178,6 +176,7 @@ def solve(current_state):
                 print '{0} changed state during iteration {1}'.format(rule.__doc__, p_iter)
                 
             if einstein.end_solution(current_state):
+                einstein.print_solution(current_state)
                 return current_state, p_iter
                 
         if current_state == pre_rules_state: #nothing happened
