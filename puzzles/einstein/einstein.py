@@ -1,7 +1,8 @@
 from   copy import deepcopy
 import logging
+import pdb
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.ERROR)
 
 house_colors =  ['red',     'green',  'blue',     'white',   'yellow']
 nationalities = ['british', 'danish', 'german',   'swedish', 'norweigen']
@@ -26,25 +27,48 @@ START_STATE = {
 class StateError(Exception):
     pass
 
+
+
 def print_solution(state):
     """
     A very simple print function to show the current solution .
     
     :param dict state: The state of the world.
     """
+    def pad_values(state):
+        """ Specific padding for printing """
+        for house, properties in new_state.iteritems(): # In this house
+            for property, values in properties.iteritems(): # Examine the properties
+                for padder in ('....', '...', '..', '.'):
+                    if len(values) < 5:
+                        values.add(padder)
+                    
     print '\n\n'
     row = "{0:13s} | {1:13s}| {2:13s}| {3:13s}| {4:13s}| {5:13s}|"
+    spacer = "{0}|{0}|{0}|{0}|{0}|{0}|".format('--------------')
     new_state = deepcopy(state)
-    get_property = lambda ps: ps.pop() if len(ps) == 1 else 'unknown'
-    for property in ('house_color', 'nationality', 'drink', 'sport', 'pet',):
+    pad_values(new_state)
+    
+    get_property = lambda ps: ps.pop()
+    
+    def print_row(title, property):
         print row.format(
-            property,
+            title,
             get_property(new_state['1'][property]),
             get_property(new_state['2'][property]),
             get_property(new_state['3'][property]),
             get_property(new_state['4'][property]),
             get_property(new_state['5'][property])
         )
+        
+    print spacer
+    for property in ('house_color', 'nationality', 'drink', 'sport', 'pet',):
+        print_row(property, property)
+        print_row('', property)
+        print_row('', property)
+        print_row('', property)
+        print_row('', property)
+        print spacer
 
 def remove_value(position, property, value, state):
     """
