@@ -1,24 +1,44 @@
 import einstein
 from copy import deepcopy
 
+def the_person_who_is(predicate, is_this, new_predicate, assign_this, state):
+    """
+    If the person matches a predicate then assing another predicate.
+    
+    eg.  the brit lives in a red house.
+    
+    If you find a brit assign the house red.
+    Else if you find a red house assign the brit.
+    Else propose the following
+        If a house has no british posibilities remove red.
+        If a house has no red possibilities remove british.
+        
+    :param str predicate: The predicate we are looking for.
+    :param str is_this: Value to search with.
+    :param str predicate: The predicate we will asign.
+    :param str assign_this: Value to assign.
+    :param dict state: The current state of the universe.
+    """
+    house_is_this = einstein.get_position(is_this, state)
+    house_assigned_this = einstein.get_position(assign_this, state)
+    if house_is_this:
+        return einstein.assign_value(house_is_this, new_predicate , assign_this, state)
+    elif house_assigned_this:
+        return einstein.assign_value(house_assigned_this, predicate, is_this, state)
+    else:
+        return einstein.propose_link(predicate, is_this, new_predicate, assign_this, state)
+
 def rule1(state):
     """The Brit lives in a red house."""
-    british_house = einstein.get_position('british', state)
-    red_house = einstein.get_position('red', state)
-    if british_house:
-        return einstein.assign_value(british_house, 'house_color', 'red', state)
-    elif red_house:
-        return einstein.assign_value(red_house, 'nationality', 'british', state)
-    else:
-        return einstein.propose_value('house_color', 'red', 'nationality', 'british', state)
+    return the_person_who_is('nationality', 'british', 'house_color', 'red', state)
 
 def rule2(state):
     """The Swede keeps dogs."""
-    return einstein.propose_value('nationality', 'swedish', 'pet', 'dog', state)
+    return the_person_who_is('nationality', 'swedish', 'pet', 'dog', state)
 
 def rule3(state):
     """The Dane drinks tea."""
-    return einstein.propose_value('nationality', 'danish', 'drink', 'tea', state)
+    return the_person_who_is('nationality', 'danish', 'drink', 'tea', state)
 
 def rule4(state):
     """The green house is on the left of the white house."""
@@ -61,15 +81,11 @@ def rule4(state):
 
 def rule5(state):
     """The green house owner drinks coffee."""
-    house = einstein.get_position('green', state)
-    if house:
-        return einstein.assign_value(house, 'drink', 'coffee', state)
-    else:
-        return einstein.propose_value('drink', 'coffee', 'house_color', 'green', state)
+    return the_person_who_is('drink', 'coffee', 'house_color', 'green', state)
 
 def rule6(state):
     """The person who plays polo rears birds."""
-    return einstein.propose_value('sport', 'polo', 'pet', 'bird', state)
+    return the_person_who_is('sport', 'polo', 'pet', 'bird', state)
 
 def rule7(state):
     """The owner of the yellow house plays hockey."""
@@ -80,7 +96,7 @@ def rule7(state):
     elif hockey_house:
         return einstein.assign_value(yellow_house, 'house_color', 'yellow', state)
     else:
-        return einstein.propose_value('house_color', 'yellow', 'sport', 'hockey', state)
+        return einstein.propose_link('house_color', 'yellow', 'sport', 'hockey', state)
 
 def rule8(state):
     """The man living in the house right in the center drinks milk."""
@@ -126,11 +142,11 @@ def rule11(state):
 
 def rule12(state):
     """The man who plays billiards drinks beer."""
-    return einstein.propose_value('sport', 'billiards', 'drink', 'beer', state)
+    return the_person_who_is('sport', 'billiards', 'drink', 'beer', state)
 
 def rule13(state):
     """The German plays soccer."""
-    return einstein.propose_value('nationality', 'german', 'sport', 'soccer', state)
+    return the_person_who_is('nationality', 'german', 'sport', 'soccer', state)
 
 def rule14(state):
     """The Norwegian lives next to the blue house."""
