@@ -185,9 +185,9 @@ def last_man_standing(state):
                 in_other_house = False # Assume its not in another house
                 val = tuple(values)[0]
                 for other in [k for k in state.keys() if k != house]:
-                    if val in other: # Try to break the assumption
+                    if val in state[other][property]: # Try to break the assumption
                         in_other_house = True
-                if in_other_house: # self explanitary :-)
+                if in_other_house: # He musn't have been properly assigned
                     yield (house, property, tuple(values)[0],)
 
 def elimination_sweep(state):
