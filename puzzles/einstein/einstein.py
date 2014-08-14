@@ -1,8 +1,14 @@
-from   copy import deepcopy
-import logging
+from copy import deepcopy
 import collections
+import logging
+import sys
 
-logging.basicConfig(level=logging.INFO, file="op_log.txt")
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+
+ch = logging.StreamHandler(sys.stdout)
+ch.setLevel(logging.DEBUG)
+logger.addHandler(ch)
 
 house_colors =  ['red',     'green',  'blue',     'white',   'yellow']
 nationalities = ['british', 'danish', 'german',   'swedish', 'norweigen']
@@ -93,6 +99,7 @@ def remove_value(position, property, value, state):
     properties = new_state[position][property] # pluck out the properties
     if value in properties: # if the value is there remove it
         properties.remove(value)
+        logger.info('Removed %s %s from house %s', property, value, position)
     if not properties: # if the properties is empty afterwards then we have an issue
         raise StateError("House %s, %s no values left!", position, property)
     return new_state
@@ -114,11 +121,10 @@ def assign_value(position, property, value, state):
     """
     new_state = deepcopy(state)
     new_state[position][property] = set([value])
-    logging.debug('Assigned %s %s to house %s', property, value, position)
+    logger.info('Assigned %s %s to house %s', property, value, position)
     for house, details in new_state.iteritems():
         if house != position and value in details[property]:
             new_state = remove_value(house, property, value, new_state)
-            logging.info('Removed %s %s from house %s', property, value, house)
     return new_state
 
 def get_position(value, state):
@@ -181,7 +187,7 @@ def last_man_standing(state):
                 for other in [k for k in state.keys() if k != house]:
                     if val in other: # Try to break the assumption
                         in_other_house = True
-                if not in_other_house: # self explanitary :-)
+                if in_other_house: # self explanitary :-)
                     yield (house, property, tuple(values)[0],)
 
 def elimination_sweep(state):
@@ -193,6 +199,7 @@ def elimination_sweep(state):
     """
     new_state = deepcopy(state)
     for house, property, value in last_man_standing(state):
+        logger.info('LAST MAN STANDING %s, %s, %s', house, property, value)
         new_state = assign_value(house, property, value, new_state)
     return new_state
 
