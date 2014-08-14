@@ -114,7 +114,7 @@ class EinsteinTest(unittest.TestCase):
         ### LOCK
         self.assertEqual(einstein.get_position('norweigen', new_state), '1')
 
-    def test_propose_value(self):
+    def test_propose_link(self):
         """
         Proposing a value doesn't officially make an assignment.
 
@@ -123,17 +123,17 @@ class EinsteinTest(unittest.TestCase):
         """
         # Proposing a value with no assignments made won't change state
         new_state = deepcopy(einstein.START_STATE)
-        new_state = einstein.propose_value('nationality', 'swedish', 'pet', 'bird', new_state)
+        new_state = einstein.propose_link('nationality', 'swedish', 'pet', 'bird', new_state)
         self.assertEqual(new_state, einstein.START_STATE)
 
         # The norweigen cannot own a bird, because the swede does.
         new_state = einstein.assign_value('1', 'nationality', 'norweigen', new_state)
-        new_state = einstein.propose_value('nationality', 'swedish', 'pet', 'bird', new_state)
+        new_state = einstein.propose_link('nationality', 'swedish', 'pet', 'bird', new_state)
         self.assertNotIn('bird', new_state['1']['pet'])
 
         # If house 3 owns a horse then the swede cannot live there, because he owns a bird.
         new_state = einstein.assign_value('3', 'pet', 'horse', new_state)
-        new_state = einstein.propose_value('nationality', 'swedish', 'pet', 'bird', new_state)
+        new_state = einstein.propose_link('nationality', 'swedish', 'pet', 'bird', new_state)
         self.assertNotIn('swedish', new_state['3']['nationality'])
 
     def test_next_to_houses(self):
