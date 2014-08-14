@@ -36,18 +36,28 @@ RULE The Dane drinks tea. changed state
 Removed house_color green from house 1
 Removed house_color white from house 3
 RULE The green house is on the left of the white house. changed state
+LAST MAN STANDING 1, house_color, yellow
+Assigned house_color yellow to house 1
+Removed house_color yellow from house 3
+Removed house_color yellow from house 4
+Removed house_color yellow from house 5
 Removed drink coffee from house 1
 Removed drink coffee from house 2
 Removed house_color green from house 3
 RULE The green house owner drinks coffee. changed state
+LAST MAN STANDING 3, house_color, red
+Assigned house_color red to house 3
+Removed house_color red from house 4
+Removed house_color red from house 5
+LAST MAN STANDING 5, house_color, white
+Assigned house_color white to house 5
+Removed house_color white from house 4
 Assigned sport hockey to house 1
 Removed sport hockey from house 2
 Removed sport hockey from house 3
 Removed sport hockey from house 4
 Removed sport hockey from house 5
 RULE The owner of the yellow house plays hockey. changed state
-Assigned drink milk to house 3
-Assigned nationality norweigen to house 1
 Assigned pet horse to house 2
 Removed pet horse from house 1
 Removed pet horse from house 3
@@ -56,75 +66,101 @@ Removed pet horse from house 5
 RULE The man who keeps horses lives next to the one who plays hockey. changed state
 Removed drink beer from house 1
 RULE The man who plays billiards drinks beer. changed state
+LAST MAN STANDING 1, drink, water
+Assigned drink water to house 1
+Removed drink water from house 2
+Removed drink water from house 4
+Removed drink water from house 5
 Assigned sport baseball to house 2
 Removed sport baseball from house 3
 Removed sport baseball from house 4
 Removed sport baseball from house 5
 RULE The man who plays baseball has a neighbor who drinks water. changed state
 ######  begin iteration 3
+Assigned nationality british to house 3
+Removed nationality british from house 4
+Removed nationality british from house 5
+RULE The Brit lives in a red house. changed state
 Removed nationality swedish from house 2
+Removed pet dog from house 3
 RULE The Swede keeps dogs. changed state
-Removed house_color white from house 4
-RULE The green house is on the left of the white house. changed state
+Assigned drink coffee to house 4
+Removed drink coffee from house 5
+RULE The green house owner drinks coffee. changed state
 Removed pet bird from house 1
 RULE The person who plays polo rears birds. changed state
-Assigned sport hockey to house 1
-Assigned drink milk to house 3
-Assigned nationality norweigen to house 1
 Removed pet cat from house 4
 Removed pet cat from house 5
 RULE The man who plays baseball lives next to the man who keeps cats. changed state
 Removed drink beer from house 2
+Removed sport billiards from house 4
 RULE The man who plays billiards drinks beer. changed state
-Removed nationality german from house 2
-RULE The German plays soccer. changed state
-######  begin iteration 4
+LAST MAN STANDING 2, drink, tea
 Assigned drink tea to house 2
-Removed drink tea from house 4
 Removed drink tea from house 5
-RULE The Dane drinks tea. changed state
-Assigned sport hockey to house 1
-Assigned drink milk to house 3
-Assigned nationality norweigen to house 1
+Removed nationality german from house 2
+Removed sport soccer from house 3
+RULE The German plays soccer. changed state
+LAST MAN STANDING 2, nationality, danish
+Assigned nationality danish to house 2
+Removed nationality danish from house 4
+Removed nationality danish from house 5
+LAST MAN STANDING 3, sport, polo
+Assigned sport polo to house 3
+Removed sport polo from house 4
+Removed sport polo from house 5
+LAST MAN STANDING 4, sport, soccer
+Assigned sport soccer to house 4
+Removed sport soccer from house 5
+######  begin iteration 4
+Assigned pet bird to house 3
+Removed pet bird from house 4
+Removed pet bird from house 5
+RULE The person who plays polo rears birds. changed state
+Assigned nationality german to house 4
+Removed nationality german from house 5
+RULE The German plays soccer. changed state
 ######  begin iteration 5
-Assigned drink tea to house 2
-Assigned sport hockey to house 1
-Assigned drink milk to house 3
-Assigned nationality norweigen to house 1
+Assigned pet dog to house 5
+Removed pet dog from house 4
+RULE The Swede keeps dogs. changed state
+LAST MAN STANDING 4, pet, fish
+Assigned pet fish to house 4
+Removed pet fish from house 1
 
 
 
 --------------|--------------|--------------|--------------|--------------|--------------|
 house_color   | ...          | blue         | ...          | ....         | ...          |
-              | ....         | ...          | ..           | green        | white        |
-              | ..           | ....         | ....         | red          | ....         |
-              | yellow       | ..           | red          | yellow       | red          |
-              | .            | .            | yellow       | ...          | yellow       |
+              | ....         | ...          | ....         | .            | white        |
+              | ..           | ....         | ..           | green        | ....         |
+              | yellow       | ..           | red          | ..           | ..           |
+              | .            | .            | .            | ...          | .            |
 --------------|--------------|--------------|--------------|--------------|--------------|
-nationality   | norweigen    | danish       | german       | german       | german       |
-              | .            | .            | swedish      | danish       | danish       |
-              | ....         | ....         | ....         | swedish      | swedish      |
-              | ..           | ..           | british      | ....         | ....         |
-              | ...          | ...          | ...          | british      | british      |
+nationality   | norweigen    | danish       | ...          | german       | swedish      |
+              | .            | .            | ....         | ...          | ...          |
+              | ....         | ....         | ..           | ....         | ....         |
+              | ..           | ..           | british      | ..           | ..           |
+              | ...          | ...          | .            | .            | .            |
 --------------|--------------|--------------|--------------|--------------|--------------|
-drink         | water        | tea          | ...          | water        | water        |
-              | ...          | .            | ....         | ...          | ...          |
-              | ....         | ....         | milk         | coffee       | coffee       |
-              | ..           | ..           | ..           | ....         | ....         |
-              | .            | ...          | .            | beer         | beer         |
+drink         | water        | tea          | ...          | ...          | ...          |
+              | ...          | .            | ....         | coffee       | beer         |
+              | ....         | ....         | milk         | ....         | ....         |
+              | ..           | ..           | ..           | ..           | ..           |
+              | .            | ...          | .            | .            | .            |
 --------------|--------------|--------------|--------------|--------------|--------------|
-sport         | ...          | ....         | polo         | polo         | polo         |
-              | ....         | .            | ...          | ...          | ...          |
-              | hockey       | baseball     | soccer       | soccer       | soccer       |
-              | ..           | ..           | ....         | ....         | ....         |
-              | .            | ...          | ..           | billiards    | billiards    |
+sport         | ...          | ....         | polo         | ...          | ...          |
+              | ....         | .            | ...          | soccer       | billiards    |
+              | hockey       | baseball     | ....         | ....         | ....         |
+              | ..           | ..           | ..           | ..           | ..           |
+              | .            | ...          | .            | .            | .            |
 --------------|--------------|--------------|--------------|--------------|--------------|
-pet           | ...          | ...          | fish         | ...          | ...          |
-              | fish         | horse        | cat          | fish         | fish         |
-              | ....         | ....         | ....         | ....         | ....         |
-              | ..           | ..           | dog          | dog          | bird         |
-              | cat          | .            | bird         | bird         | dog          |
+pet           | ...          | ...          | ...          | ...          | ...          |
+              | .            | horse        | ....         | fish         | ....         |
+              | ....         | ....         | bird         | ....         | dog          |
+              | ..           | ..           | ..           | ..           | ..           |
+              | cat          | .            | .            | .            | .            |
 --------------|--------------|--------------|--------------|--------------|--------------|
 
 
-Solved: False on iteration 4
+Solved: True on iteration 5
