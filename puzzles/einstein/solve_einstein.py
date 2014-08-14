@@ -159,38 +159,37 @@ def rule15(state):
     """The man who plays baseball has a neighbor who drinks water."""
     return the_neighbour_of('sport', 'baseball', 'drink', 'water', state)
 
-def solve(current_state):
+def solve(current_state, rule_order):
     """
-
+    Solve the puzzle with a list of rules
     """
-    rule_list = [
+    while not einstein.end_solution(current_state):
+        # Safe guard to ensure a rules are being applied
+        pre_rules_state = current_state
+        
+        for rule in rule_order:
+            old_state = current_state
+            
+            # See what changes state
+            current_state = rule(current_state)
+            if current_state != old_state: #something happened
+                print '{0} changed state'.format(rule.__doc__)
+            
+            # see if any additional changes can be made    
+            current_state = einstein.elimination_sweep(current_state)
+            if current_state != old_state: #something happened
+                print '{0} changed state'.format(rule.__doc__)
+                
+        # Safe guard to ensure a rules are being applied 
+        if current_state == pre_rules_state: #nothing happened
+            break
+    return current_state
+        
+if __name__ == '__main__':
+    state = deepcopy(einstein.START_STATE)
+    rule_order = [
         rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8,
         rule9, rule10, rule11, rule12, rule13, rule14, rule15
     ]
-    for p_iter in xrange(100):
-        pre_rules_state = current_state
-        
-        for rule in rule_list:
-            old_state = current_state
-            current_state = einstein.elimination_sweep(rule(current_state))
-            
-            if current_state != old_state: #something happened
-                print '{0} changed state during iteration {1}'.format(rule.__doc__, p_iter)
-                
-            if einstein.end_solution(current_state):
-                einstein.print_solution(current_state)
-                return current_state, p_iter
-                
-        if current_state == pre_rules_state: #nothing happened
-            return current_state, p_iter
-        else:
-            einstein.print_solution(current_state)
-            
-    return current_state, p_iter
-        
-           
-
-if __name__ == '__main__':
-    state = deepcopy(einstein.START_STATE)
-    state, puzzle_iteration = solve(state)
-    print "Stopped at iteration {0}".format(puzzle_iteration)
+    einstein.print_solution(solve(state, rule_order))
+    print '\n\nSolved: {0}'.format(einstein.end_solution(current_state))
