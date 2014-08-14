@@ -174,12 +174,10 @@ def solve(current_state, rule_order):
             # See what changes state
             current_state = rule(current_state)
             if current_state != old_state: #something happened
-                print '{0} changed state'.format(rule.__doc__)
+                print 'RULE {0} changed state'.format(rule.__doc__)
             
             # see if any additional changes can be made    
             current_state = einstein.elimination_sweep(current_state)
-            if current_state != old_state: #something happened
-                print 'ELIMINATION Changed state'
                 
         # Safe guard to ensure a rules are being applied 
         if current_state == pre_rules_state: #nothing happened
