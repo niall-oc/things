@@ -1,0 +1,60 @@
+niall@xual:~/Software/things$ python solve_einstein.py 
+The green house is on the left of the white house. changed state
+The man living in the house right in the center drinks milk. changed state
+The Norwegian lives in the first house. changed state
+The man who plays billiards drinks beer. changed state
+The German plays soccer. changed state
+The Norwegian lives next to the blue house. changed state
+The Brit lives in a red house. changed state
+The Swede keeps dogs. changed state
+The Dane drinks tea. changed state
+The green house is on the left of the white house. changed state
+The green house owner drinks coffee. changed state
+The owner of the yellow house plays hockey. changed state
+The man who keeps horses lives next to the one who plays hockey. changed state
+The man who plays billiards drinks beer. changed state
+The man who plays baseball has a neighbor who drinks water. changed state
+The Swede keeps dogs. changed state
+The green house is on the left of the white house. changed state
+The person who plays polo rears birds. changed state
+The man who plays baseball lives next to the man who keeps cats. changed state
+The man who plays billiards drinks beer. changed state
+The German plays soccer. changed state
+The Dane drinks tea. changed state
+
+
+
+--------------|--------------|--------------|--------------|--------------|--------------|
+house_color   | ...          | blue         | ...          | ....         | ...          |
+              | ....         | ...          | ..           | green        | white        |
+              | ..           | ....         | ....         | red          | ....         |
+              | yellow       | ..           | red          | yellow       | red          |
+              | .            | .            | yellow       | ...          | yellow       |
+--------------|--------------|--------------|--------------|--------------|--------------|
+nationality   | norweigen    | danish       | german       | german       | german       |
+              | .            | .            | swedish      | danish       | danish       |
+              | ....         | ....         | ....         | swedish      | swedish      |
+              | ..           | ..           | british      | ....         | ....         |
+              | ...          | ...          | ...          | british      | british      |
+--------------|--------------|--------------|--------------|--------------|--------------|
+drink         | water        | tea          | ...          | water        | water        |
+              | ...          | .            | ....         | ...          | ...          |
+              | ....         | ....         | milk         | coffee       | coffee       |
+              | ..           | ..           | ..           | ....         | ....         |
+              | .            | ...          | .            | beer         | beer         |
+--------------|--------------|--------------|--------------|--------------|--------------|
+sport         | ...          | ....         | polo         | polo         | polo         |
+              | ....         | .            | ...          | ...          | ...          |
+              | hockey       | baseball     | soccer       | soccer       | soccer       |
+              | ..           | ..           | ....         | ....         | ....         |
+              | .            | ...          | ..           | billiards    | billiards    |
+--------------|--------------|--------------|--------------|--------------|--------------|
+pet           | ...          | ...          | fish         | ...          | ...          |
+              | fish         | horse        | cat          | fish         | fish         |
+              | ....         | ....         | ....         | ....         | ....         |
+              | ..           | ..           | dog          | bird         | dog          |
+              | cat          | .            | bird         | dog          | bird         |
+--------------|--------------|--------------|--------------|--------------|--------------|
+
+
+Solved: False
