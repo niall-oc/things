@@ -18,7 +18,8 @@ The system consists of 5 houses in a row.  Each house has the following properti
     'drink'      : 'water', # shame if you are surprised :-)
     'pet'        : 'horse',
     'sport'      : 'hurling' # look it up
-}```
+}
+```
 
 For each of the 5 houses you must choose from the folling options.  Cigarette's were used when I first encountered this BUT they're plain wrong.
 
