@@ -23,8 +23,8 @@ The system consists of 5 houses in a row.  Each house has the following properti
 
 For each of the 5 houses you must choose from the folling options.  Cigarette's were used when I first encountered this BUT they're plain wrong.
 
-| Property    | Posibilities |
------------------------------|
+| Property    | Posibilities                                |
+| ----------- |:------------------------------------------- |
 | nationality | norweigan, german, danish, british, swedish |
 | house_color | red, green, yellow, blue, white |
 | drink | water, tea, coffee, beer, milk |
@@ -55,10 +55,10 @@ The goal
 
 Fill in the blanks.
 
-|| House1 | House2 | House3 | House4 | House5 |
------------------------------------------------
-|house_color||||||
-|nationality||||||
-|drink||||||
-|pet||||||
-|drink||||||
+|   | House1 | House2 | House3 | House4 | House5 |
+|:--- |:--- |:--- |:--- |:--- |:--- |
+| house_color |   |   |   |   |   |
+| nationality |   |   |   |   |   |
+| drink |   |   |   |   |   |
+| pet |   |   |   |   |   |
+| drink |   |   |   |   |   |
