@@ -18,7 +18,7 @@ from random import randint
 SOLUTION = list(range(1, 101))
 
 # Define operations
-operators = ('+', '-', '*', '/',)
+operators = "+-/*"
 
 # Create lambdas for 5! and 5!!
 f = lambda x: factorial(5)
@@ -49,6 +49,54 @@ def add_factorials(fives):
     fact = lambda : 'ff(5)' if randint(0,10) > 8 else 'f(5)'
     # return the subbed fives
     return [fact() if randint(0,10) > 8 else five for five in fives]
+
+def find_opening_parenthesis_pos(gene):
+    """
+    Randomly choose a position on the gene to insert opening parenthesis. 
+    Suitable positions would be one of the following.
+    
+    - The begining.
+    - Any space after an operator.
+    
+    :param str gene: A gene representing an equation.
+    :return list: A sorted list of openings
+    """
+    openings = [0] # because 0 is a valid opening.
+    for op in operators: # Look for the spaces after operators
+        pos = gene.find(op, 1)
+        while pos > 0: # while not past the end of the gene
+            openings.append(pos+1)
+            pos = gene.find(op, pos+1) # keep searching.
+    return sorted(openings)
+
+def find_closing_parenthesis_pos(gene):
+    """
+    Randomly choose a position on the gene to insert closing parenthesis. 
+    Suitable positions would be one of the following.
+    
+    - The end.
+    - Any space before an operator.
+    
+    :param str gene: A gene representing an equation.
+    :return list: A sorted list of closings
+    """
+    ending = len(gene) -1
+    closings = [ending] # because the end is a valid closing.
+    for op in operators: # Look for the spaces after operators
+        pos = gene.rfind(op, 0, ending)
+        while pos > 0: # while not past the begining of the gene
+            closings.append(pos-1)
+            pos = gene.rfind(op, 0, pos-1) # keep searching.
+    return sorted(closings)
+
+def insert_parenthesis(gene):
+    """
+    Opening parenthesis can be inserted at the begining or after any operator.
+    Closing parenthesis can be inserted at the end or after any 5, 5! or 5!!.
+    Opening parenthesis must preceed any closing parenthesis.
+    An insert involves placing both into a gene.
+    """
+    
 
 def create_gene(use_adjoin_rule=False):
     """

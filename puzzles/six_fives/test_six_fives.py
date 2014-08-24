@@ -34,3 +34,29 @@ class TestSixFives(unittest.TestCase):
         """
         new_fives = six_fives.add_factorials(['5']*6)
         self.assertEqual(len(new_fives), 6)
+
+    def test_find_opening_parenthesis_pos(self):
+        """
+        Randomly choose a position on the gene to insert parenthesis. Suitable 
+        positions would be one of the following.
+        
+        - The begining.
+        - Any space after an operator.
+        """
+        # Extract all suitable openings.
+        openings = [0, 3, 10, 18, 22, 26]
+        gene = "5 + f(5) * ff(5) / 5 + 5 - ff(5)"
+        self.assertEqual(openings, six_fives.find_opening_parenthesis_pos(gene))
+    
+    def test_find_closing_parenthesis_pos(self):
+        """
+        Randomly choose a position on the gene to insert parenthesis. Suitable 
+        positions would be one of the following.
+        
+        - The end.
+        - Any space before an operator.
+        """
+        # Extract all suitable closings.
+        closings = [1, 8, 16, 20, 24, 31]
+        gene = "5 + f(5) * ff(5) / 5 + 5 - ff(5)"
+        self.assertEqual(closings, six_fives.find_closing_parenthesis_pos(gene))
