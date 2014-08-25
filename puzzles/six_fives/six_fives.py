@@ -50,6 +50,27 @@ def add_factorials(fives):
     # return the subbed fives
     return [fact() if randint(0,10) > 8 else five for five in fives]
 
+def add_parenthesis(fives):
+  """
+  Randomly insert Parenthesis pairs before or after fives so that
+    5 + f(5) * ff(5) / 5 + 5 - ff(5)
+  becomes
+    (5 + f(5)) * ff(5) / (5 + 5) - ff(5)
+  """
+  # Need to mark the end and set closing parenthesis position to 0
+  end = len(fives)-1
+  close = 0
+  # While a closing parenthesis has not been placed at the end.
+  while close < end:
+    # Find a position to add an opening
+    open = randint(close+1, end)
+    # From the opening to the end find a position to add a closing.
+    close = randint(open, end)
+    # Add the opening and closing parenthesis
+    fives[open] = '({0}'.format(fives[open])
+    fives[close] = '{0})'.format(fives[close])
+  return fives
+
 def create_gene(use_adjoin_rule=False):
     """
     Create an equation using six 5's using the following heuristic.
@@ -59,7 +80,7 @@ def create_gene(use_adjoin_rule=False):
     Randomly drop 5 between operators giving
         5 + f(5) * ff(5) / 5 + 5 - ff(5)
     Randomly insert Parenthesis pairs before or after fives giving
-        (5 + 5) * 5 / 5 + 5 - 5
+        (5 + f(5)) * ff(5) / (5 + 5) - ff(5)
     
     :return str: equation to evaluate
     """
