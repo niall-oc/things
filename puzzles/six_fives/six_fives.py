@@ -14,6 +14,7 @@ Objective:
 
 from math import factorial
 from random import randint
+from copy import copy
 
 SOLUTION = list(range(1, 101))
 
@@ -34,7 +35,7 @@ def create_base_gene(fives):
     """
     equation = ""
     while fives:
-        equation = "{0} {1} ".format(equation, fives.pop())
+        equation = "{0} {1} ".format(equation, fives.pop(0))
         if fives: # If this is not the last 5
             equation = "{0} {1} ".format(equation, operators[randint(0,3)])
     return equation
@@ -50,53 +51,28 @@ def add_factorials(fives):
     # return the subbed fives
     return [fact() if randint(0,10) > 8 else five for five in fives]
 
-def find_opening_parenthesis_pos(gene):
+def add_parenthesis(fives):
     """
-    Randomly choose a position on the gene to insert opening parenthesis. 
-    Suitable positions would be one of the following.
-    
-    - The begining.
-    - Any space after an operator.
-    
-    :param str gene: A gene representing an equation.
-    :return list: A sorted list of openings
+    Randomly insert Parenthesis pairs before or after fives so that
+        5 + f(5) * ff(5) / 5 + 5 - ff(5)
+    becomes
+        (5 + f(5)) * ff(5) / (5 + 5) - ff(5)
     """
-    openings = [0] # because 0 is a valid opening.
-    for op in operators: # Look for the spaces after operators
-        pos = gene.find(op, 1)
-        while pos > 0: # while not past the end of the gene
-            openings.append(pos+1)
-            pos = gene.find(op, pos+1) # keep searching.
-    return sorted(openings)
-
-def find_closing_parenthesis_pos(gene):
-    """
-    Randomly choose a position on the gene to insert closing parenthesis. 
-    Suitable positions would be one of the following.
-    
-    - The end.
-    - Any space before an operator.
-    
-    :param str gene: A gene representing an equation.
-    :return list: A sorted list of closings
-    """
-    ending = len(gene) -1
-    closings = [ending] # because the end is a valid closing.
-    for op in operators: # Look for the spaces after operators
-        pos = gene.rfind(op, 0, ending)
-        while pos > 0: # while not past the begining of the gene
-            closings.append(pos-1)
-            pos = gene.rfind(op, 0, pos-1) # keep searching.
-    return sorted(closings)
-
-def insert_parenthesis(gene):
-    """
-    Opening parenthesis can be inserted at the begining or after any operator.
-    Closing parenthesis can be inserted at the end or after any 5, 5! or 5!!.
-    Opening parenthesis must preceed any closing parenthesis.
-    An insert involves placing both into a gene.
-    """
-    
+    new_fives = copy(fives)
+    # Need to mark the end and set closing parenthesis position to 0
+    end = len(new_fives)-1
+    closep = 0
+    # While a closing parenthesis has not been placed at the end.
+    while closep < end:
+        # Find a position to add an opening
+        openp = randint(closep, end)
+        # From the opening to the end find a position to add a closing.
+        closep = randint(openp, end)
+        # Add the opening and closing parenthesis
+        new_fives[openp] = '({0}'.format(new_fives[openp])
+        new_fives[closep] = '{0})'.format(new_fives[closep])
+        closep += 1 # increment the closep to stop a double insert.
+    return new_fives
 
 def create_gene(use_adjoin_rule=False):
     """
@@ -107,13 +83,15 @@ def create_gene(use_adjoin_rule=False):
     Randomly drop 5 between operators giving
         5 + f(5) * ff(5) / 5 + 5 - ff(5)
     Randomly insert Parenthesis pairs before or after fives giving
-        (5 + 5) * 5 / 5 + 5 - 5
+        (5 + f(5)) * ff(5) / (5 + 5) - ff(5)
     
     :return str: equation to evaluate
     """
     fives = ['5', '5', '5', '5', '5', '5']
     # Randomly change some 5's to be 5! or 5!! 
     fives = add_factorials(fives)
+    # Insert parenthesis
+    fives = add_parenthesis(fives)
     # we want five operators to join six 5's together
     equation = create_base_gene(fives)
     return equation
@@ -121,9 +99,12 @@ def create_gene(use_adjoin_rule=False):
 if __name__ == "__main__":
     # Randomly find solutions for numbers between 1 and 100
     results = dict()
-    for i in range(10000):
+    for i in range(100):
         gene = create_gene()
-        res = eval(gene)
+        try:
+            res = eval(gene)
+        except ZeroDivisionError:
+            res = None
         if isinstance(res, int) and res > 0 and res < 101:
             results[res] = (gene,) + results.setdefault(res, tuple())
     from pprint import pprint
