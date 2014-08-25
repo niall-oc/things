@@ -99,14 +99,26 @@ def create_gene(use_adjoin_rule=False):
 if __name__ == "__main__":
     # Randomly find solutions for numbers between 1 and 100
     results = dict()
-    for i in range(10000):
-        gene = create_gene()
-        try:
-            res = eval(gene)
-        except ZeroDivisionError:
-            res = None
-        if isinstance(res, int) and res > 0 and res < 101:
-            results[res] = (gene,) + results.setdefault(res, tuple())
+    target = 64
+    genes = [create_gene() for i in range(100)] # 100 genes per generation
+    for i in range(100): # for 100 generations
+        for gene in genes:
+            try:
+                res = eval(gene)
+                difference = abs(target-res)
+                if difference < 100:
+                    results[difference] = (gene,) + results.setdefault(difference, tuple())
+            except ZeroDivisionError:
+                res = None
+            # save the difference as the key
+            
+        if 0 in results: # stop if we found it
+            print results.get(0)
+            break
+        else:
+            #  Need to mutate and cross over here
+            genes = [create_gene() for i in range(100)]
     from pprint import pprint
-    pprint(results)
+    pprint(results[min(results.keys())])
+    print 'Search over, nearest is ', min(results.keys())
     
