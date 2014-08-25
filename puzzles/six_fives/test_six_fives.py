@@ -28,9 +28,26 @@ class TestSixFives(unittest.TestCase):
         """
         Randomly change 5 to be 5! or 5!! so that
         fives   -> ['5', '5', '5', '5', '5', '5']
-        becomes -> ['5', 'f(5)', 'ff(5)', '5', '5', 'ff5()']
+        becomes -> ['5', 'f(5)', 'ff(5)', '5', '5', 'ff(5)']
         
         Its random so a harness is not possible.
         """
-        new_fives = six_fives.add_factorials(['5']*6)
-        self.assertEqual(len(new_fives), 6)
+        fives = six_fives.add_factorials(['5']*6)
+        self.assertEqual(len(fives), 6)
+        fives = ''.join(fives)
+        checksum = [1 for c in fives if c == '('] + [-1 for c in fives if c == ')']
+        self.assertEqual(sum(checksum), 0)
+    
+    def test_add_parenthesis(self):
+        """
+        Randomly insert parenthesis
+        fives   -> ['5', 'f(5)', 'ff(5)', '5', '5', 'ff(5)']
+        becomes -> ['5', '(f(5)', 'ff(5)', '5)', '5', 'ff(5)']
+        
+        Its random so a harness is not possible.
+        """
+        fives = six_fives.add_factorials(['5']*6)
+        self.assertEqual(len(fives), 6)
+        fives = ''.join(fives)
+        checksum = [1 for c in fives if c == '('] + [-1 for c in fives if c == ')']
+        self.assertEqual(sum(checksum), 0)

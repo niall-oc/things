@@ -99,7 +99,7 @@ def create_gene(use_adjoin_rule=False):
 if __name__ == "__main__":
     # Randomly find solutions for numbers between 1 and 100
     results = dict()
-    for i in range(100):
+    for i in range(10000):
         gene = create_gene()
         try:
             res = eval(gene)
