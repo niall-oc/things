@@ -15,14 +15,22 @@ import unittest
 import six_fives
 
 class TestSixFives(unittest.TestCase):
-    def test_create_base_gene(self):
+    def test_add_operators(self):
         """
-        A gene *must* have six 5's.
+        Randomly drop operators between fives so that
+        fives   -> ['5', 'f(5)', 'ff(5)', '5', '5', 'ff5()']
+        becomes -> "5 + f(5) * ff(5) / 5 + 5 - ff(5)"
+        
+        Its random so a harness is not possible.
         """
-        gene = six_fives.create_base_gene(['5']*6)
-        self.assertIn('5', gene)
-        fives  = [5 for f in gene if f == '5']
+        fives = ['5', '(f(5)', 'ff(5)', '5)', '5', 'ff(5)']
+        fives = six_fives.add_operators(fives)
+        self.assertIn('5', fives)
+        checksum = [1 for c in fives if c == '('] + [-1 for c in fives if c == ')']
+        self.assertEqual(sum(checksum), 0)
+        fives  = [5 for f in fives if f == '5']
         self.assertEqual(len(fives), 6)
+        
     
     def test_add_factorials(self):
         """
@@ -51,3 +59,20 @@ class TestSixFives(unittest.TestCase):
         fives = ''.join(fives)
         checksum = [1 for c in fives if c == '('] + [-1 for c in fives if c == ')']
         self.assertEqual(sum(checksum), 0)
+    
+    def test_find_crossover_points(self):
+        """
+        Find the potential crossover points in an equation.
+        Any operater that is not inside parenthesis is a potential crossover.
+        """
+        # There are 5 crossovers here.
+        gene = "5 + f(5) * ff(5) / 5 + 5 - ff(5)"
+        self.assertEqual(len(six_fives.find_crossover_points(gene)), 5)
+        # There are 3 crossovers here.
+        gene = "(5 + f(5)) * ff(5) / (5 + 5) - ff(5)"
+        self.assertEqual(len(six_fives.find_crossover_points(gene)), 3)
+        # There are 0 crossovers here.
+        gene = "(5 + f(5) * ff(5) / 5 + 5 - ff(5))"
+        self.assertEqual(len(six_fives.find_crossover_points(gene)), 0)
+        
+        

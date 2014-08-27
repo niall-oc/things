@@ -25,13 +25,16 @@ operators = "+-/*"
 f = lambda x: factorial(5)
 ff = lambda x: factorial(factorial(5))
 
-def create_base_gene(fives):
+def add_operators(fives):
     """
     Create an equation using six 5's using the following heuristic.
     
-    Randomly drop 5 between operators so that
+    Randomly drop operators between fives so that
     fives   -> ['5', 'f(5)', 'ff(5)', '5', '5', 'ff5()']
     becomes -> "5 + f(5) * ff(5) / 5 + 5 - ff(5)"
+    
+    :param list fives: The list of 5's
+    :return str: fives with operators inserted
     """
     equation = ""
     while fives:
@@ -45,6 +48,9 @@ def add_factorials(fives):
     Randomly change 5 to be 5! or 5!! so that
     fives   -> ['5', '5', '5', '5', '5', '5']
     becomes -> ['5', 'f(5)', 'ff(5)', '5', '5', 'ff5()']
+    
+    :param list fives: The list of 5's
+    :return list: fives with factorials inserted
     """
     # 20% chance we will use ff(5) insteand of f(5)
     fact = lambda : 'ff(5)' if randint(0,10) > 8 else 'f(5)'
@@ -57,6 +63,9 @@ def add_parenthesis(fives):
         5 + f(5) * ff(5) / 5 + 5 - ff(5)
     becomes
         (5 + f(5)) * ff(5) / (5 + 5) - ff(5)
+    
+    :param list fives: The list of 5's
+    :return list: fives with parenthesis inserted
     """
     new_fives = copy(fives)
     # Need to mark the end and set closing parenthesis position to 0
@@ -74,7 +83,7 @@ def add_parenthesis(fives):
         closep += 1 # increment the closep to stop a double insert.
     return new_fives
 
-def create_gene(use_adjoin_rule=False):
+def create_gene():
     """
     Create an equation using six 5's using the following heuristic.
     
@@ -95,6 +104,30 @@ def create_gene(use_adjoin_rule=False):
     # we want five operators to join six 5's together
     equation = create_base_gene(fives)
     return equation
+
+def find_crossover_points(gene):
+    """
+    Find the crossover points in a gene.  This is defined as;
+    
+    - Any operater that is not inside parenthesis.
+    
+    :param str gene: an equation
+    :return list: the possible crossover points
+    """
+    split_gene = gene.split()
+    co_points = []
+    in_parenthesis = 0
+    for index in range(len(gene)):
+        part = gene[index]
+        if part in '+-/*' and not in_parenthesis:
+            co_points.append(index)
+        else:
+            for char in part:
+                if char == '(':
+                    in_parenthesis += 1
+                elif char == ')':
+                    in_parenthesis -= 1
+    return co_points
 
 if __name__ == "__main__":
     # Randomly find solutions for numbers between 1 and 100
