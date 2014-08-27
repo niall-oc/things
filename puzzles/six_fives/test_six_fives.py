@@ -75,4 +75,16 @@ class TestSixFives(unittest.TestCase):
         gene = "(5 + f(5) * ff(5) / 5 + 5 - ff(5))"
         self.assertEqual(len(six_fives.find_crossover_points(gene)), 0)
         
+    def test_crossover_genes(self):
+        """
+        given the following
+        ['5 + 5 * 5 + 5 * (5) - 5', '5 + 5 + 5 + (f(5) / 5 + 5)']
+        the first three operators are crossovers.
+        """
+        genes = ['5 + 5 * 5 + 5 * (5) - 5', '5 + 5 + 5 + (f(5) / 5 + 5)']
+        print six_fives.crossover_genes(genes)
+        mam, dad = genes
+        print six_fives.find_crossover_points(mam)
+        print six_fives.find_crossover_points(dad)
+        
         

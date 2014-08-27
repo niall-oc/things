@@ -15,6 +15,7 @@ Objective:
 from math import factorial
 from random import randint
 from copy import copy
+from itertools import combinations
 
 SOLUTION = list(range(1, 101))
 
@@ -102,7 +103,7 @@ def create_gene():
     # Insert parenthesis
     fives = add_parenthesis(fives)
     # we want five operators to join six 5's together
-    equation = create_base_gene(fives)
+    equation = add_operators(fives)
     return equation
 
 def find_crossover_points(gene):
@@ -117,8 +118,8 @@ def find_crossover_points(gene):
     split_gene = gene.split()
     co_points = []
     in_parenthesis = 0
-    for index in range(len(gene)):
-        part = gene[index]
+    for index in range(len(split_gene)):
+        part = split_gene[index]
         if part in '+-/*' and not in_parenthesis:
             co_points.append(index)
         else:
@@ -129,17 +130,50 @@ def find_crossover_points(gene):
                     in_parenthesis -= 1
     return co_points
 
+def crossover_genes(genes):
+    """
+    Using all the pair combinations of the genes. See if mating is possible.
+    Append the new genes to the next generation
+    """
+    next_generation = []
+    # For all the pairs than can be mated
+    for combination in combinations(genes, 2):
+        mam, dad = combination
+        # Find the crossover points
+        mam_options = find_crossover_points(mam)
+        dad_options = find_crossover_points(dad)
+        # Find the intersecting crossover points if any
+        crossovers = set(mam_options).intersection(set(dad_options))
+        # For any mate points
+        for crossover in crossovers:
+            mam_split = mam.split()
+            dad_split = dad.split()
+            # Grab the two crossover possibilities
+            juniorM = ' '.join(mam_split[:crossover] + dad_split[crossover:])
+            juniorD = ' '.join(dad_split[:crossover] + mam_split[crossover:])
+            # Append to the next generation
+            next_generation.append(juniorM)
+            next_generation.append(juniorD)
+    return next_generation
+
+
 if __name__ == "__main__":
     # Randomly find solutions for numbers between 1 and 100
     results = dict()
-    target = 64
+    target = 100
+    historical_genes = set()
     genes = [create_gene() for i in range(100)] # 100 genes per generation
-    for i in range(100): # for 100 generations
+    generation = 0
+    while 0 not in results: # for 100 generations
+        generation +=1
+        results = dict()
+        historical_genes.update(genes) # Record the genes used
+        # Evaluate every gene
         for gene in genes:
             try:
                 res = eval(gene)
                 difference = abs(target-res)
-                if difference < 100:
+                if difference < 100: # impose some fitness
                     results[difference] = (gene,) + results.setdefault(difference, tuple())
             except ZeroDivisionError:
                 res = None
@@ -149,8 +183,12 @@ if __name__ == "__main__":
             print results.get(0)
             break
         else:
-            #  Need to mutate and cross over here
-            genes = [create_gene() for i in range(100)]
+            # Need a new generation. start with the fittest
+            best_genes = [g for key in sorted(results.keys())[:5] for g in results[key]]
+            # Breed new genes but only take ones that haven't already been evaluated
+            new_genes = set(crossover_genes(best_genes)).difference(historical_genes)
+            genes = best_genes + list(new_genes)
+            print "generation {0}".format(generation)
     from pprint import pprint
     pprint(results[min(results.keys())])
     print 'Search over, nearest is ', min(results.keys())
