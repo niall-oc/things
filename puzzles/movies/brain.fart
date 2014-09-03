@@ -1,0 +1,87 @@
+Python 2.7.6 (default, Mar 22 2014, 22:59:38) 
+[GCC 4.8.2] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> movies = """Jaws (1975)
+... Starwars 1977
+... 2001 A Space Odyssey ( 1968 )
+... Back to the future 1985.
+... Raiders of the lost ark 1981 .
+... jurassic park 1993
+... The Matrix 1999
+... A fist full of Dollars
+... 10,000 BC (2008)
+... 1941 (1979)
+... 24 Hour Party People (2002)
+... 300 (2007)
+... 2010"""
+>>> movies = movies.splitlines()
+>>> movies
+['Jaws (1975)', 'Starwars 1977', '2001 A Space Odyssey ( 1968 )', 'Back to the future 1985.', 'Raiders of the lost ark 1981 .', 'jurassic park 1993', 'The Matrix 1999', 'A fist full of Dollars', '10,000 BC (2008)', '1941 (1979)', '24 Hour Party People (2002)', '300 (2007)', '2010']
+>>> m = movies[0]
+>>> m[::-1]
+')5791( swaJ'
+>>> [n for n in m if n.isdigit()]
+['1', '9', '7', '5']
+>>> ''.join([n for n in m if n.isdigit()])[:-4]
+''
+>>> ''.join([n for n in m if n.isdigit()])[-4:]
+'1975'
+>>> m = m[2]
+>>> ''.join([n for n in m if n.isdigit()])[-4:]
+''
+>>> m
+'w'
+>>> m = movies[2]
+>>> m
+'2001 A Space Odyssey ( 1968 )'
+>>> ''.join([n for n in m if n.isdigit()])[-4:]
+'1968'
+>>> get_year = lambda m ''.join([n for n in m if n.isdigit()])[-4:]
+  File "<stdin>", line 1
+    get_year = lambda m ''.join([n for n in m if n.isdigit()])[-4:]
+                         ^
+SyntaxError: invalid syntax
+>>> get_year = lambda m : ''.join([n for n in m if n.isdigit()])[-4:]
+>>> for movie in movies:
+...     print get_year(movie)
+... 
+1975
+1977
+1968
+1985
+1981
+1993
+1999
+
+2008
+1979
+2002
+2007
+2010
+>>> results = dict()
+>>> for movie in movies:
+...     year = get_year(movie)
+...     if year:
+...         decade = "{0}0s".format(year[:3])
+...         results[decade] = results.setdefault(decade, 0) + 1
+... 
+>>> results
+{'1960s': 1, '1980s': 2, '2000s': 3, '1970s': 3, '1990s': 2, '2010s': 1}
+>>> sorted(results, key=lambda m: m[1])
+['2000s', '2010s', '1960s', '1980s', '1970s', '1990s']
+>>> sorted(results.items(), key=lambda m: m[1])
+[('1960s', 1), ('2010s', 1), ('1980s', 2), ('1990s', 2), ('2000s', 3), ('1970s', 3)]
+>>> sorted(results.items(), key=lambda m: m[1], reverse=True)
+[('2000s', 3), ('1970s', 3), ('1980s', 2), ('1990s', 2), ('1960s', 1), ('2010s', 1)]
+>>> output = sorted(results.items(), key=lambda m: m[1], reverse=True)
+>>> for year, n in output:
+...    print "{0} : {1}".format(year, n)
+... 
+2000s : 3
+1970s : 3
+1980s : 2
+1990s : 2
+1960s : 1
+2010s : 1
+>>> 
+
