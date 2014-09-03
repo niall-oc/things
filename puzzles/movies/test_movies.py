@@ -40,10 +40,16 @@ class TestMovies(unittest.TestCase):
         Given a line of input find the year of release.
         
         1. The year will always be 4 digits.
-        2. The year will always suceed the movie title.
+        2. The year will always succeed the movie title.
+        3. If there are only 4 digits in a line of input
+           AND there is no text before the 4 digits
+           THEN those digits are considered part of the title.
         
         EG.
             Starwars (1977)           # year is 1997
             2001 A space odyssey 1968 # year is 1968
+            2010                      # NO year
+            1985.                     # NO year
+            75                        # NO year
         """
         pass
