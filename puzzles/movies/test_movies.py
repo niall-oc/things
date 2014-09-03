@@ -34,3 +34,16 @@ class TestMovies(unittest.TestCase):
     
     def tearDown(self):
         pass
+    
+    def test_find_year_for_title(self):
+        """
+        Given a line of input find the year of release.
+        
+        1. The year will always be 4 digits.
+        2. The year will always suceed the movie title.
+        
+        EG.
+            Starwars (1977)           # year is 1997
+            2001 A space odyssey 1968 # year is 1968
+        """
+        pass
