@@ -23,6 +23,7 @@ def find_year(title):
        1977
     
     :param str title: A string containing a movie title and year of relaease.
+    :return str: Year of release
     """
     # find all patterns that match the year pattern
     matches = year_pattern.findall(title)
@@ -39,3 +40,25 @@ def find_year(title):
             return None
         else:
             return year
+
+def rank_decades(movies):
+    """
+    Returns a dictionary of decades -> number of movies released.
+    
+    usage:
+        >>> rank_decades(['starwars 1977'])
+        {'1970s': 1}
+    
+    :param list movies: A collection of title strings
+    :return dict: decades and number of releases.
+    """
+    results = {}
+    for movie in movies:
+        year = find_year(movie)
+        # If we found a release year then count it
+        if year: 
+            # A way to map year to decade
+            decade = "{0}0s".format(year[:3])
+            results[decade] = results.setdefault(decade, 0) + 1
+    return results
+    

@@ -63,3 +63,36 @@ class TestMovies(unittest.TestCase):
         )
         for given, expected in harness:
             self.assertEqual(movies.find_year(given), expected)
+    
+    def test_count_freq_of_decade(self):
+        """
+        This is the main test of the "app" :-).  Can we accurately place a film 
+        into a decade.
+        """
+        # Input a collection of movies from above
+        inputs = (
+            "Jaws (1975)",
+            "Starwars 1977",
+            "2001 A Space Odyssey ( 1968 )",
+            "Back to the future 1985.",
+            "Raiders of the lost ark 1981 .",
+            "jurassic park 1993",
+            "The Matrix 1999",
+            "A fist full of Dollars",
+            "10,000 BC (2008)",
+            "1941 (1979)",
+            "24 Hour Party People (2002)",
+            "300 (2007)",
+            "2010",
+        )
+        # Assert the decades are counted correctly
+        harness = {
+            "2000s" : 3,
+            "1970s" : 3,
+            "1980s" : 2,
+            "1990s" : 2,
+            "1960s" : 1
+        }
+        results = movies.rank_decades(inputs)
+        for decade, expected in harness.iteritems():
+            self.assertEquals(results[decade], expected)
