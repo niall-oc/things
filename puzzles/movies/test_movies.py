@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
+import movies
 
 class TestMovies(unittest.TestCase):
     """
@@ -52,4 +53,13 @@ class TestMovies(unittest.TestCase):
             1985.                     # NO year
             75                        # NO year
         """
-        pass
+        harness = (
+            ("Starwars (1977)", "1977",),
+            #("2001 A space odyssey 1968", "1968",),
+            #("2010", None,),
+            #("1985.", None,),
+            #(".1985", "1985",),
+            #("75", None,),
+        )
+        for given, expected in harness:
+            self.assertEqual(movies.find_year(given), expected)
