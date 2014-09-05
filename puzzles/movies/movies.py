@@ -24,8 +24,18 @@ def find_year(title):
     
     :param str title: A string containing a movie title and year of relaease.
     """
+    # find all patterns that match the year pattern
     matches = year_pattern.findall(title)
+    # if any matches
     if matches:
-        return matches[-1]
-    
-
+        # record for convienence
+        year = matches[-1]
+        too_short = len(title) < 8
+        # If the year is the title then return None
+        if year == title:
+            return None
+        # If we have enough room for 1 block of 4 digits and its at the start
+        elif too_short and title.startswith(year):
+            return None
+        else:
+            return year

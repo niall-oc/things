@@ -55,11 +55,11 @@ class TestMovies(unittest.TestCase):
         """
         harness = (
             ("Starwars (1977)", "1977",),
-            #("2001 A space odyssey 1968", "1968",),
-            #("2010", None,),
-            #("1985.", None,),
-            #(".1985", "1985",),
-            #("75", None,),
+            ("2001 A space odyssey 1968", "1968",),
+            ("2010", None,),
+            ("1985.", None,),
+            (".1985", "1985",),
+            ("75", None,),
         )
         for given, expected in harness:
             self.assertEqual(movies.find_year(given), expected)
