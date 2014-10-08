@@ -47,7 +47,20 @@ def find_neighbours(cell, grid):
     # The cell itself is not a neighbour
     potential.remove(cell)
     return potential.intersection(grid)
+
+def step(grid):
+    """
+    In the following order the rules for each step are executed.
     
-    
-    
-    
+    Any live cell with fewer than two live neighbours dies.
+    Any live cell with two or three live neighbours remains alive.
+    Any live cell with more than three live neighbours dies.
+    Any dead cell with exactly three live neighbours becomes a live cell.
+    """
+    # rule 1.
+    new_grid = set()
+    for cell in grid:
+        neighbours = find_neighbours(cell, grid)
+        
+    return new_grid
+    return new_grid

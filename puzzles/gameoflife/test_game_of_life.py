@@ -50,4 +50,14 @@ class GameOfLife(unittest.TestCase):
         self.assertIn((3,3), neighbours)
         self.assertIn((1,1), neighbours)
         
-        
+    def test_rule_one(self):
+        """
+        # Any live cell with fewer than two live neighbours dies.
+                        
+             #      -->          
+             
+        """
+        grid = set([(2,2)])
+        new_grid = game_of_life.step(grid)
+        self.assertNotIn((2,2), new_grid)
+
