@@ -17,7 +17,7 @@ Rules
 # Any live cell with more than three live neighbours dies.
                         
     #              #    
-    ##     -->          
+   ###     -->    # #   
     #              #    
 
 # Any dead cell with exactly three live neighbours becomes a live cell.
@@ -72,4 +72,14 @@ class GameOfLife(unittest.TestCase):
         new_grid = game_of_life.step(grid)
         self.assertEqual(grid, new_grid)
         
-
+    def test_rule_three(self):
+        """
+        # Any live cell with more than three live neighbours dies.
+                        
+             #              #    
+            ###     -->    # #   
+             #              #    
+        """
+        grid = set([(1,0), (2,0), (3,0), (2,1), (2,-1)])
+        new_grid = game_of_life.step(grid)
+        self.assertNotIn((2,0), new_grid)

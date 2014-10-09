@@ -61,7 +61,8 @@ def step(grid):
     new_grid = set()
     for cell in grid:
         neighbours = find_neighbours(cell, grid)
-        if len(neighbours) in (2,3,):
+        len_neighbours = len(neighbours)
+        if len_neighbours in (2,3,):
             new_grid.add(cell)
         
     return new_grid
