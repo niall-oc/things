@@ -60,4 +60,16 @@ class GameOfLife(unittest.TestCase):
         grid = set([(2,2)])
         new_grid = game_of_life.step(grid)
         self.assertNotIn((2,2), new_grid)
+    
+    def test_rule_two(self):
+        """
+        # Any live cell with two or three live neighbours remains alive.
+                                
+            ##     -->     ##   
+            #              #    
+        """
+        grid = set([(1,0), (2,0), (2,-1)])
+        new_grid = game_of_life.step(grid)
+        self.assertEqual(grid, new_grid)
+        
 
