@@ -106,9 +106,9 @@ class GameOfLife(unittest.TestCase):
         """
         # Any live cell with more than three live neighbours dies.
                         
-             #              #    
-            ###     -->    # #   
-             #              #    
+             #              #
+            ###     -->    # #
+             #              #
         """
         grid = set([(1,0), (2,0), (3,0), (2,1), (2,-1)])
         new_grid = game_of_life.step(grid)
