@@ -25,7 +25,7 @@ Produce the following output.
 """
 import re
 
-year_pattern = re.compile("\d{4}") # or [0-9]{4}
+year_pattern = re.compile("[0-9]{4}") # or [0-9]{4}
 
 def find_year(title):
     """
@@ -81,7 +81,9 @@ def rank_decades(movies):
         if year: 
             # A way to map year to decade
             decade = "{0}0s".format(year[:3])
-            results[decade] = results.setdefault(decade, 0) + 1
+        else:
+            decade = "None"
+        results[decade] = results.setdefault(decade, 0) + 1
     return results
 
 if __name__ == "__main__":

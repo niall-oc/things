@@ -44,40 +44,6 @@ def find_surrounding(cell):
     surrounding.remove(cell)
     return surrounding
 
-def find_neighbours(cell, grid):
-    """
-    A neighbour is any living cell that is in within 1x or 1y of the current
-    cell.  Consider the folowing
-    
-    (1,1)  (2,1)  (3,1)
-    (1,0)  (2,0)  (3,0)  
-    
-    >>> find_neighbours((1,1))
-    set([(1,0), (2,0), (2,1)])
-    
-    :param tuple cell: The x,y position of the cell.
-    :param set grid: The state of the universe.
-    :return set: The neighbours of cell.
-    """
-    potential = find_surrounding(cell)
-    return potential.intersection(grid)
-
-def find_spaces_around_cells(grid):
-    """
-    For every cell in the grid find the surrounding spaces.
-    
-    :param set grid: The state of the universe.
-    :return set: The set of spaces surrounding cells.
-    """
-    spaces = set()
-    for cell in grid:
-        # Find all the cells around this one
-        surrounding = find_surrounding(cell)
-        # Determine which of the surrounding spaces have no cells
-        # Add those spaces to the spaces set
-        spaces = spaces.union(surrounding.difference(grid))
-    return spaces
-
 def step(grid):
     """
     In the following order the rules for each step are executed.
@@ -87,18 +53,26 @@ def step(grid):
     Any live cell with more than three live neighbours dies.
     Any dead cell with exactly three live neighbours becomes a live cell.
     """
-    # rule 1.
+    # From every living cells perspective lets find the surrounfing spaces.
+    surrounding_spaces = [space for cell in grid for space in find_surrounding(cell)]
+    # This creates overlap.  The number of overlaps tells homany neighbours a 
+    # space has.  This is an interesting way to process our rules.
+    
+    # A dictionary is one way to count this information easily.  We can 
+    # count ewach time we insert a key/space to the dictionary.
+    neighbour_count = {}
+    for space in surrounding_spaces:
+        neighbour_count[space] = neighbour_count.setdefault(space, 0) + 1
+        
+    # Preserve state between generations by creating a new grid.
     new_grid = set()
-    # For each cell in the grid only allow those with 2 or 3 neoghbours to live.
-    for cell in grid:
-        neighbours = find_neighbours(cell, grid)
-        if len(neighbours) in (2,3,):
+    
+    for cell, count in neighbour_count.iteritems():
+        # Rule #2 letting living cells with 2 or 3 neighbours survive.
+        if count in (2,3,) and cell in grid:
             new_grid.add(cell)
-    
-    # For each space around a cell only allow those with 3 neighbours to live.
-    for space in find_spaces_around_cells(grid):
-        neighbours = find_neighbours(space, grid)
-        if len(neighbours) == 3:
-            new_grid.add(space)
-    
+        # Rule #4 empty space with 3 living neighbours comes to life.
+        if count == 3 and cell not in grid:
+           new_grid.add(cell)
+        # Rule 1 and 3 are implemented by default.
     return new_grid
