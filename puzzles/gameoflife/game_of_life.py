@@ -53,15 +53,16 @@ def step(grid):
     Any live cell with more than three live neighbours dies.
     Any dead cell with exactly three live neighbours becomes a live cell.
     """
-    # From every living cells perspective lets find the surrounfing spaces.
-    surrounding_spaces = [space for cell in grid for space in find_surrounding(cell)]
-    # This creates overlap.  The number of overlaps tells homany neighbours a 
+    # From every living cells perspective lets find the surrounding spaces.
+
+    # This creates overlap.  The number of overlaps tells how many neighbours a 
     # space has.  This is an interesting way to process our rules.
     
     # A dictionary is one way to count this information easily.  We can 
-    # count ewach time we insert a key/space to the dictionary.
+    # count each time we insert a key/space to the dictionary.
     neighbour_count = {}
-    for space in surrounding_spaces:
+    # using a generator saves a bit of memory
+    for space in (space for cell in grid for space in find_surrounding(cell)):
         neighbour_count[space] = neighbour_count.setdefault(space, 0) + 1
         
     # Preserve state between generations by creating a new grid.
