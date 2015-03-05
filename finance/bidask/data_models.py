@@ -38,7 +38,7 @@ class Owner(Base):
     __tablename__ = 'owner'
     __table_args__ = auto_increment
     id = Column(Integer, primary_key=True)
-    buyer_id = Column(Integer, ForeignKey('client.id'))
+    owner_id = Column(Integer, ForeignKey('client.id'))
     seller_id = Column(Integer, ForeignKey('client.id'))
     ticker = Column(String(8), ForeignKey('symbol.ticker'))
     quantity = Column(Integer, nullable=False)
@@ -64,7 +64,7 @@ class Ask(Base):
     ticker = Column(String(8), ForeignKey('symbol.ticker'))
     quantity = Column(Integer, nullable=False)
     price = Column(Float, nullable=False)
-    owner = Column(Integer)
+    owner_id = Column(Integer, ForeignKey('owner.id'))
     time = Column(DateTime, default=datetime.utcnow)
 
 class Daily(Base):

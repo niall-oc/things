@@ -86,7 +86,7 @@ class TestExcuteStockOrder(unittest.TestCase):
                 )
                 self.session.add(order)
                 owner = Owner(
-                    buyer_id=client.id,
+                    owner_id=client.id,
                     seller_id=client.id,
                     ticker=symbol.ticker,
                     quantity=quantity,
@@ -113,18 +113,17 @@ class TestExcuteStockOrder(unittest.TestCase):
         
         When recording an ask the time stamp is recorded.
         """
-        client = self.session.query(Client).filter(Client.name == "**MARKET MAKER**").first()
-        symbol = self.session.query(Symbol).first()
+        owner = self.session.query(Owner).first()
         quantity = 10
-        price = 12.50
-        data_api.place_ask(self.session, client, symbol, quantity, price)
+        ask_price = 12.50
+        data_api.place_ask(self.session, owner, ask_price)
         # This should be the only entry in the as table.
         a = self.session.query(Ask).first()
-        self.assertTrue(a.client_id == client.id)
-        self.assertTrue(a.ticker == symbol.ticker)
-        self.assertTrue(a.quantity == quantity)
-        self.assertTrue(a.price == price)
-        self.assertTrue("%.2f"%a.price == "%.2f"%price)
+        self.assertTrue(a.client_id == owner.seller_id)
+        self.assertTrue(a.ticker == owner.ticker)
+        self.assertTrue(a.quantity == owner.quantity)
+        self.assertTrue(a.price == ask_price)
+        self.assertTrue(a.owner_id == owner.id)
         self.assertIsNotNone(a.time)
 
     def test_place_bid(self):
@@ -143,7 +142,7 @@ class TestExcuteStockOrder(unittest.TestCase):
         symbol = self.session.query(Symbol).first()
         quantity = 10
         price = 12.45
-        data_api.place_bid(self.session, client, symbol, quantity, price)
+        data_api.place_bid(self.session, client.id, symbol.ticker, quantity, price)
         # This should be the only entry in the as table.
         b = self.session.query(Bid).first()
         self.assertTrue(b.client_id == client.id)
@@ -152,6 +151,29 @@ class TestExcuteStockOrder(unittest.TestCase):
         self.assertTrue(b.price == price)
         self.assertTrue("%.2f"%b.price == "%.2f"%price)
         self.assertIsNotNone(b.time)
+
+
+    def test_order_matching(self):
+        """
+        When a bid or an ask match an order can be executed.
+        """
+        #Grab an owner and a random client
+        owner = self.session.query(Owner).first()
+        client = self.session.query(Client).all()[3]
+        #Create the perfect bid and ask.
+        ask_price = owner.ask_price * 1.10
+        data_api.place_ask(self.session, owner, ask_price)
+        data_api.place_bid(self.session, client.id, owner.ticker, owner.quantity, ask_price)
+        #See that the order matches the bid
+        orders = data_api.match_orders(self.session, owner.ticker)
+        self.assertEqual(len(orders), 1)
+        order = orders[0]
+        self.assertEqual(order.buyer_id, client.id)
+        self.assertEqual(order.seller_id, owner.owner_id)
+        self.assertEqual(order.quantity, owner.quantity)
+        self.assertEqual(order.ticker, owner.ticker)
+        self.assertEqual(order.ask_price, owner.ask_price * 1.10)
+        
 
     def test_execute_order(self):
         """
@@ -163,9 +185,9 @@ class TestExcuteStockOrder(unittest.TestCase):
         3. Details of the order must be added to the orders table.
         4. The bid must be removed from the bids table.
         5. The ask must be removed from the ask table.
-        
         """
         pass
+        
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
