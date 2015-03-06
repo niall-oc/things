@@ -10,7 +10,9 @@ import unittest, os, random
 from datetime import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from data_models import Client, Symbol, Order, Owner, Bid, Ask, Base
+from data_models import Client, Symbol, Order, Owner, Bid, Ask, Base, Daily, Hourly
+
+random.seed()
 
 init_clients = (
     "**MARKET MAKER**",
@@ -61,7 +63,7 @@ class TestExcuteStockOrder(unittest.TestCase):
         DBSession = sessionmaker(bind=engine)
         self.session = DBSession()
         
-        ### Load with data
+        ### Load symbols and clients
         for ticker in init_symbols.keys():
             s = Symbol(ticker=ticker, total_stocks=1000)
             self.session.add(s)
@@ -70,13 +72,23 @@ class TestExcuteStockOrder(unittest.TestCase):
             c = Client(name=client, capital=1000.00)
             self.session.add(c)
         
-        # Float the stock
         client = self.session.query(Client).filter(Client.name == "**MARKET MAKER**").first()
         symbols = self.session.query(Symbol).all()
+        price_details = {}
+        
+        ### Come up with quantity and prices for each order.
         for symbol in symbols:
             quantity_choices = init_symbols[symbol.ticker]
             while symbol.total_stocks > 15:
                 quantity, price = random.choice(quantity_choices)
+                price_details[symbol.ticker] = price_details.get(symbol.ticker, []) + [(quantity, price)]
+                symbol.total_stocks -= quantity
+            self.session.add(symbol)
+        #print 'ORDER LOAD--------------'
+        ### create and add each order
+        for symbol in symbols:
+            for quantity, price in price_details[symbol.ticker]:
+                #print 'ORDER ', symbol.ticker
                 order = Order(
                     buyer_id=client.id,
                     seller_id=client.id,
@@ -85,17 +97,41 @@ class TestExcuteStockOrder(unittest.TestCase):
                     ask_price=price
                 )
                 self.session.add(order)
-                owner = Owner(
-                    owner_id=client.id,
-                    seller_id=client.id,
-                    ticker=symbol.ticker,
-                    quantity=quantity,
-                    ask_price=price,
-                    order_id=order.id
-                )
-                self.session.add(owner)
-                symbol.total_stocks -= quantity
-            self.session.add(symbol)
+        self.session.commit()
+        #print 'OWNER LOAD--------------'
+        ### After speedily committing all orders
+        ### execute and create owners
+        orders = self.session.query(Order).all()
+        for order in orders:
+            #print 'OWNER ', order.ticker
+            owner = Owner(
+                owner_id=order.buyer_id,
+                seller_id=order.seller_id,
+                ticker=order.ticker,
+                quantity=order.quantity,
+                ask_price=order.ask_price,
+                order_id=order.id
+            )
+            self.session.add(owner)
+        self.session.commit
+        
+        ### Pretend this happened and update the hourly and daily stats
+        for symbol in symbols:
+            quantity_choices = init_symbols[symbol.ticker]
+            daily = Daily(
+                opening_ask=quantity_choices[-1][1],
+                closing_ask=quantity_choices[-1][1],
+                high=quantity_choices[-1][1],
+                low=quantity_choices[-1][1],
+                ticker=symbol.ticker
+            )
+            self.session.add(daily)
+            hourly = Hourly(
+                ticker=symbol.ticker,
+                bid_price=quantity_choices[-1][1],
+                ask_price=quantity_choices[-1][1]
+            )
+            self.session.add(hourly)
         self.session.commit()
     
     def tearDown(self):
@@ -152,7 +188,6 @@ class TestExcuteStockOrder(unittest.TestCase):
         self.assertTrue("%.2f"%b.price == "%.2f"%price)
         self.assertIsNotNone(b.time)
 
-
     def test_order_matching(self):
         """
         When a bid or an ask match an order can be executed.
@@ -167,14 +202,13 @@ class TestExcuteStockOrder(unittest.TestCase):
         #See that the order matches the bid
         orders = data_api.match_orders(self.session, owner.ticker)
         self.assertEqual(len(orders), 1)
-        order = orders[0]
+        order, ask = orders[0]
         self.assertEqual(order.buyer_id, client.id)
         self.assertEqual(order.seller_id, owner.owner_id)
         self.assertEqual(order.quantity, owner.quantity)
         self.assertEqual(order.ticker, owner.ticker)
         self.assertEqual(order.ask_price, owner.ask_price * 1.10)
         
-
     def test_execute_order(self):
         """
         An order can execute when a bid and an ask match.  When an order 
@@ -186,11 +220,21 @@ class TestExcuteStockOrder(unittest.TestCase):
         4. The bid must be removed from the bids table.
         5. The ask must be removed from the ask table.
         """
-        pass
-        
+        #seed the bid and asks table
+        stock_symbols = self.session.query(Symbol).all()
+        print [s.ticker for s in stock_symbols]
+        for symbol in stock_symbols:
+            data_api.seed_bid_ask(self.session, symbol.ticker)
+            matches = data_api.match_orders(self.session, symbol.ticker)
+            print 'Total :', len(matches)
+            if matches: # It's random after all
+                data_api.execute_orders(self.session, matches)
+                order_ids = [o.id for o, a in matches]
+                owners_count = self.session.query(Owner).filter(Owner.order_id.in_(order_ids)).count()
+                self.assertEqual(owners_count, len(matches))
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
-    suite.addTest(TestExcuteStockOrder('test_place_ask'))
+    suite.addTest(TestExcuteStockOrder('test_execute_order'))
     runner = unittest.TextTestRunner()
     runner.run(suite)
