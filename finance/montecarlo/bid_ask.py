@@ -17,34 +17,75 @@ def generate_prices(reference_price, sigma, total):
     """
     return [random.normalvariate(reference_price, sigma) for i in range(total)]
 
+def match_orders(bids, asks):
+    """
+    Given a list of bids and a list of asks. Find all matches
+        
+        logic.
+        
+        1. Find the lowest Ask.
+        2. Find the first bid that is >= to this ask.
+        3. Remove the bid and ask from each list.
+        4. When the highest bid is lower than the lowest ask we have a spread.
+        5. When complete return the matched orders, remaining asks and remaining bids.
+    """
+    matches = []; remove_bids = []; remove_asks = []
+    spread_not_found = True
+    
+    while spread_not_found:
+        # find match and reset bids and asks.
+        
+        for ask in sorted(asks):
+            for bid in sorted(bids):
+                if bid >= ask:
+                    # order can match.
+                    matches.append((bid, ask,))
+                    break
+            bids.remove(bid)
+            asks.remove(ask)
+            break
+        if max(bids) < min(asks):
+            spread_not_found = False
+    results = {'matches': matches, 'remaining_bids': bids, 'remaining_asks': asks}
+    return results
+                
+
 if __name__ == '__main__':
-    time_steps = 100
+    # constants for this simulation
+    time_steps = 24
     num_paths = 1
     ticker = 'TWTR.001'
     ask_price = 44.23
     
     ### tweaks
-    bid_follow = .98
+    bid_follow = .99
     shock = 0.0
-    num_asks = 30
-    num_bids = 30
-    sigma = .01
+    num_asks = 110
+    num_bids = 110
+    sigma = .5
     
     for i in range(num_paths):
         path = monte_carlo.path(time_steps)
         print path
         
         reference_price = ask_price + shock
-        max_ask = []
+        ask_trend = []
+        bid_trend = []
+        matches = [0]
         for time_step in path:
             ask_mu = reference_price+time_step
             bid_mu = (reference_price+time_step) * bid_follow
             asks = generate_prices(ask_mu, sigma, num_asks)
             bids = generate_prices(bid_mu, sigma, num_bids)
-            #print 'BIDS--\n%s\n\n' % bids
-            #print 'ASKS--\n%s\n\n' % asks
-            ask_price = max(asks)
-            max_ask.append(ask_price)
-        pyplot.plot(max_ask)
+            results = match_orders(bids, asks)
+            ask_trend.append(min(results['remaining_asks']))
+            bid_trend.append(max(results['remaining_bids']))
+            matches.append(matches[-1] + len(results['matches']))
+            
+        #plot the stock movement.
+        #pyplot.plot(ask_trend)
+        #pyplot.plot(bid_trend)
+        pyplot.plot(matches)
+        # plot the over all slope
             
     pyplot.show()
