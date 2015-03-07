@@ -7,8 +7,19 @@ __author__ = "Niall O'Connor"
 
 from data_models import Client, Symbol, Order, Owner, Bid, Ask, Daily, Hourly
 import random
+import monte_carlo
 
 random.seed()
+
+flip = lambda : random.choice([-1, 1])
+dice = lambda : random.random()/5
+
+def skew_price(price):
+    if flip() > 0:
+        mu_price = price + dice()
+    else:
+        mu_price = price - dice()
+    return mu_price
 
 def place_ask(session, owner, ask_price):
     """
@@ -54,12 +65,10 @@ def place_bid(session, client_id, ticker, quantity, price):
     return True
 
 def _sorted_bids(session, ticker, quantity):
-    bids = session.query(Bid).filter(Bid.ticker == ticker).filter(Bid.quantity == quantity).all()
-    return sorted(bids, key=lambda x: x.price, reverse=True)
+    return session.query(Bid).filter(Bid.ticker == ticker).order_by(Bid.price.desc()).all()
             
 def _sorted_asks(session, ticker):
-    asks = session.query(Ask).filter(Ask.ticker == ticker).all()
-    return sorted(asks, key=lambda x: x.price, reverse=True)
+    return session.query(Ask).filter(Ask.ticker == ticker).order_by(Ask.price.desc()).all()
 
 def match_orders(session, ticker):
     """
@@ -79,9 +88,10 @@ def match_orders(session, ticker):
     for ask in _sorted_asks(session, ticker): # queried once
         for bid in _sorted_bids(session, ticker, ask.quantity): # queried many
             #print ticker, "%2.6f"%bid.price, "%2.6f"%ask.price, "%2i"%bid.quantity, "%2i"%ask.quantity
-            if bid < ask:
+            if bid.price < ask.price:
                 continue
             else:# bid >= ask, meaning this ask can be filled first
+                #print 'SALE-', ticker, "%2.6f"%bid.price, "%2.6f"%ask.price
                 order = Order(
                     buyer_id=bid.client_id,
                     seller_id=ask.client_id,
@@ -123,11 +133,11 @@ def _seed_bids(session, ticker, price):
     """
     clients = session.query(Client).all()
     bids = []
-    for i in range(50):
+    for i in range(30):
         client = random.choice(clients)
         #print client.name
-        quantity = random.choice([5, 10, 20])
-        bid_price = random.normalvariate(price, .1)
+        quantity = 10
+        bid_price = random.normalvariate(price, .04)
         bids.append(
             Bid(
                 client_id=client.id,
@@ -145,10 +155,9 @@ def _seed_asks(session, ticker, price):
     """
     owners = session.query(Owner).filter(Owner.ticker == ticker).all()
     asks = []
-    for i in range(int(len(owners)/7)):
+    for i in range(int(len(owners)/3)):
         owner = owners[i]
-        #print 'OWNER-',owner.ticker
-        ask_price = random.normalvariate(price, .1)
+        ask_price = random.normalvariate(price, .04)
         asks.append(
             Ask(
                 client_id=owner.owner_id,
@@ -167,12 +176,42 @@ def seed_bid_ask(session, ticker):
     """
     #print 'SEED BID ASK - ', ticker
     hourly = session.query(Hourly).filter(Hourly.ticker == ticker).order_by(Hourly.time.desc()).first()
-    bids = _seed_bids(session, ticker, hourly.bid_price)
-    asks = _seed_asks(session, ticker, hourly.ask_price)
+    # montecarlo movement shifts the market
+    mu_ask_price = skew_price(hourly.ask_price)
+    mu_bid_price = hourly.bid_price - dice()
+    # bid price always trails ask
+    bids = _seed_bids(session, ticker, mu_bid_price)
+    asks = _seed_asks(session, ticker, mu_ask_price)
     #print len(bids), len(asks)
     for bid in bids:
         session.add(bid)
     for ask in asks:
         session.add(ask)
     session.commit()
-        
+
+def dump_bid_ask(session, ticker):
+    print '----------------------'
+    bids = session.query(Bid).filter(Bid.ticker == ticker).order_by(Bid.price.desc()).all()
+    for b in bids:
+        print 'BIDS - ', b.ticker, "%2i"%b.quantity, "%2.6f"%b.price
+    # the lowest ask for a ticker
+    print '----------------------'
+    asks = session.query(Ask).filter(Ask.ticker == ticker).order_by(Ask.price.asc()).all()
+    for a in asks:
+        print 'ASKS - ', a.ticker, "%2i"%a.quantity, "%2.6f"%a.price
+
+def hourly_stats(session, ticker):
+    """
+    """
+    # the highest bid for a ticker
+    bid = session.query(Bid).filter(Bid.ticker == ticker).order_by(Bid.price.desc()).first()
+    # the lowest ask for a ticker
+    ask = session.query(Ask).filter(Ask.ticker == ticker).order_by(Ask.price.asc()).first()
+    hourly = Hourly(
+        ticker=ticker,
+        bid_price=bid.price,
+        ask_price=ask.price
+    )
+    session.add(hourly)
+    session.commit()
+    

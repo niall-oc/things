@@ -43,9 +43,9 @@ init_clients = (
 )
 
 init_symbols = {
-    'IBM.0001': [(5, 10.10,), (10, 10.05), (20, 10.00)],
-    'MIC.0001': [(5, 5.07,),  (10, 5.05),  (20, 5.02)],
-    'YHOO.001': [(5, 13.10,), (10, 13.05), (20, 13.00)]
+    'IBM.0001': [(10, 10.05)],
+    'MIC.0001': [(10,  5.05)],
+    'YHOO.001': [(10, 13.05)]
 }
 
 
@@ -225,13 +225,18 @@ class TestExcuteStockOrder(unittest.TestCase):
         print [s.ticker for s in stock_symbols]
         for symbol in stock_symbols:
             data_api.seed_bid_ask(self.session, symbol.ticker)
+            #data_api.dump_bid_ask(self.session, symbol.ticker)
             matches = data_api.match_orders(self.session, symbol.ticker)
             print 'Total :', len(matches)
+            #data_api.dump_bid_ask(self.session, symbol.ticker)
             if matches: # It's random after all
                 data_api.execute_orders(self.session, matches)
                 order_ids = [o.id for o, a in matches]
                 owners_count = self.session.query(Owner).filter(Owner.order_id.in_(order_ids)).count()
                 self.assertEqual(owners_count, len(matches))
+            data_api.hourly_stats(self.session, symbol.ticker)
+            hourly = self.session.query(Hourly).filter(Hourly.ticker == symbol.ticker).order_by(Hourly.time.desc()).first()
+            print "Hourly -- ", hourly.ticker, "%2.6f"%hourly.bid_price, "%2.6f"%hourly.ask_price
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
