@@ -12,7 +12,7 @@ This is the question at the heart of this problem.  We are given 15 rules which 
 
 The system consists of 5 houses in a row.  Each house has the following properties { house_color, nationality, drink, pet, spport }.  For example the first house in the row could have the following properties.
 
-```
+```python
 {
     'house_color': 'green',
     'nationality': 'irish', # obviously :-)
