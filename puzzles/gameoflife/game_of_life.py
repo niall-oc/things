@@ -70,7 +70,7 @@ def step(grid):
     
     for cell, count in neighbour_count.iteritems():
         # Rule #2 letting living cells with 2 or 3 neighbours survive.
-        if count in (2,3,5,7) and cell in grid:
+        if count in (2,3,) and cell in grid:
             new_grid.add(cell)
         # Rule #4 empty space with 3 living neighbours comes to life.
         if count == 3 and cell not in grid:
