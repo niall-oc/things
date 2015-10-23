@@ -3,7 +3,9 @@ import pygame
 import random
 from math import cos, sin, radians
 
-screen = pygame.display.set_mode((800, 600))
+display_options = pygame.DOUBLEBUF| pygame.HWSURFACE | pygame.RESIZABLE# | pygame.NOFRAME # | pygame.OPENGL |pygame.FULLSCREEN
+screen = pygame.display.set_mode((800, 600), display_options)
+layer = pygame.Surface((800, 600,))
 
 def wave(x, y, r, length):
     points = []
@@ -42,9 +44,9 @@ def run(state):
     clock = pygame.time.Clock()
     running = True
     while running:
-        screen.fill((0,0,0,))
+        layer.fill((0,0,0,))
         for cell in state:
-            screen.set_at(cell, (255,255,255))
+            layer.set_at(cell, (255,255,255))
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -55,10 +57,10 @@ def run(state):
         clock.tick(24)
 
 if __name__ == "__main__":
-    state = set([(x+150, 200) for x in xrange(201)]+[(250, y+100) for y in xrange(201)])
+    # state = set([(x+150, 200) for x in xrange(201)]+[(250, y+100) for y in xrange(201)])
     # Randomise the generation
-    #state = set([])
-    #for i in xrange(10000):
-    #    state.add((random.randint(200, 300), random.randint(200, 300),))
-    #state = set(wave(0, 200, 50, 580)+wave(0, 200, 52, 580))
+    state = set([])
+    for i in xrange(1000):
+        state.add((random.randint(200, 300), random.randint(200, 300),))
+    # state = set(wave(0, 20, 50, 80)+wave(0, 20, 52, 180))
     run(state)
