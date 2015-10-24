@@ -58,10 +58,10 @@ if __name__ == '__main__':
     ask_price = 44.23
     
     ### tweaks
-    bid_follow = .99
+    bid_follow = .992
     shock = 0.0
-    num_asks = 110
-    num_bids = 110
+    num_asks = 100
+    num_bids = 100
     sigma = .5
     
     for i in range(num_paths):
