@@ -5,11 +5,10 @@ g = Graph()
 g.parse("http://bigasterisk.com/foaf.rdf")
 
 qres = g.query(
-    """SELECT DISTINCT ?aname ?bname
+    """CONSTRUCT ?a foaf:friends ?b
        WHERE {
           ?a foaf:knows ?b .
-          ?a foaf:name ?aname .
-          ?b foaf:name ?bname .
+          ?b foaf:knows ?a .
        }""")
 
 for row in qres:

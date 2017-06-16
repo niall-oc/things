@@ -1,17 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from unittest2 import TestCase
+from unittest import TestCase
 import square
 
 
 class SquareTest(TestCase):
-
-    def setup(self):
-        pass
-
-    def tearDown(self):
-        pass
 
     def test_build_square_successfully(self):
         """
@@ -21,4 +15,6 @@ class SquareTest(TestCase):
         return
             ???
         """
-        pass
+        a_square = square.square((0,0), 2)
+        expected_square = [(0,0), (0,2), (2,2), (2,0)]
+        self.assertEquals(expected_square, a_square)

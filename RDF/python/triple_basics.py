@@ -2,4 +2,4 @@ from rdflib import Graph
 
 g = Graph()
 
-print( g.serialize(format='n3') )
+print( g.serialize(format='xml') )

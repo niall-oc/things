@@ -25,7 +25,7 @@ class Departments(Resource):
         accept = request.headers['Accept']
         if 'rdf' in accept:
             resp = make_response(self.rdf_get(departments), 200)
-            resp.headers['Content-Type'] = 'text/rdf+n3'
+            resp.headers['Content-Type'] = 'application/rdf+xml'
         elif 'json' in accept:
             resp = jsonify({'departments': departments})
         else:

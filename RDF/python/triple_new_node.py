@@ -14,6 +14,6 @@ g.add( (bob, RDF.type, FOAF.Person) )
 g.add( (bob, FOAF.name, name) )
 g.add( (bob, FOAF.knows, linda) )
 g.add( (linda, RDF.type, FOAF.Person) )
-g.add( (linda, FOAF.name, Literal('Linda') ) )
+g.add( (linda, FOAF.name, Literal('Linda')) )
 
 print g.serialize(format='n3')
