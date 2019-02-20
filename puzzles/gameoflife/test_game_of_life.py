@@ -45,6 +45,13 @@ class GameOfLife(unittest.TestCase):
         expected = set([(-1, 1), (0, 1), (1, 1), (-1, 0), (1, 0), (-1, -1), (0, -1), (1, -1)])
         self.assertEqual(new_grid, expected)
 
+    def test_create_cells(self):
+        """
+        Create cells at a 10 percent rate in a 10 x 10 range.
+        """
+        new_grid = game_of_life.create_cells((0, 0), (10, 10), 10)
+        self.assertGreater(len(new_grid), 0)
+
     def test_rule_one(self):
         """
         # Any live cell with fewer than two live neighbours dies.

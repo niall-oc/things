@@ -25,6 +25,25 @@ Rules
     #      -->    ###
     #
 """
+import random
+
+
+def create_cells(start, end, percent):
+    """
+    Create cells in the box defined by start(x,y) to end(x,y).
+    The density is determined by percent.
+    """
+    width = abs(start[0] - end[0])
+    height = abs(start[1] - end[1])
+    number_of_cells = int((width*height) * (percent/100))
+    new_cells = {
+        (
+            random.randint(min(start[0], end[0]), max(start[0], end[0])),
+            random.randint(min(start[1], end[1]), max(start[1], end[1]))
+        )
+        for i in range(number_of_cells)
+    }
+    return new_cells
 
 
 def find_surrounding(cell):

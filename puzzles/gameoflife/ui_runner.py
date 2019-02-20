@@ -3,11 +3,10 @@ import random
 from math import cos, sin, radians
 import pygame
 import game_of_life
+import logging
 
-
-DISPLAY_OPTIONS = pygame.DOUBLEBUF | pygame.HWSURFACE | pygame.RESIZABLE
-SCREEN = pygame.display.set_mode((800, 600), DISPLAY_OPTIONS)
-SURFACE = pygame.Surface(SCREEN.get_size())
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 
 def wave_start_state(x, y, r, length):
@@ -51,7 +50,17 @@ def circle_start_state(x, y, r):
     return points
 
 
-def run(state):
+def init_screen(width, height):
+    """
+    Initialize pygame hardware
+    """
+    display_options = pygame.DOUBLEBUF | pygame.HWSURFACE | pygame.RESIZABLE | pygame.FULLSCREEN
+    screen = pygame.display.set_mode((width, height), display_options)
+    surface = pygame.Surface(screen.get_size())
+    return screen, surface
+
+
+def run(game_state, width, height, percent):
     """
     Main loop
     """
@@ -59,25 +68,37 @@ def run(state):
     running = True
     black = (0, 0, 0)
     white = (255, 255, 255)
-    origin = (0,0)
+    origin = (0, 0)
+    start = origin
+    end = width, height
+    screen, surface = init_screen(width, height)
+
+    pygame.font.init()
+    myfont = pygame.font.SysFont('Comic Sans MS', 30)
+    screen_stats = "start: {0}, end: {1}"
+    textsurface = myfont.render(screen_stats.format(0, 0), False, (255, 255, 0))
     while running:
-        SURFACE.fill(black)
-        for cell in state:
-            SURFACE.set_at(cell, white)
+        surface.fill(black)
+        for cell in game_state:
+            surface.set_at(cell, white)
 
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.KEYDOWN or event.type == pygame.QUIT:
                 running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                start = pygame.mouse.get_pos()
+            if event.type == pygame.MOUSEBUTTONUP:
+                end = pygame.mouse.get_pos()
+                textsurface = myfont.render(screen_stats.format(start, end), False, (255, 255, 0))
+                game_state = game_state.union(game_of_life.create_cells(start, end, percent))
 
-        SCREEN.blit(SURFACE.convert(), origin)
+
+        screen.blit(surface.convert(), origin)
+        screen.blit(textsurface.convert(), origin)
         pygame.display.flip()
-        state = game_of_life.step(state)
+        game_state = game_of_life.step(game_state)
         clock.tick(24)
 
 
 if __name__ == "__main__":
-    game_state = set([])
-    for i in range(1000):
-        game_state.add((random.randint(0, 800), random.randint(0, 600),))
-    # state = set(wave_start_state(0, 20, 50, 80) + wave_start_state(0, 20, 52, 180))
-    run(game_state)
+    run(game_state=set([]), width=640, height=480, percent=10)
