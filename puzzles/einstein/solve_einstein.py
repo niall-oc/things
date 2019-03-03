@@ -1,18 +1,19 @@
 import einstein
 from copy import deepcopy
 
+
 def the_person_who_is(predicate, with_this, new_predicate, assign_this, state):
     """
     If the person matches a predicate then assing another predicate.
-    
+
     eg.  The brit lives in a red house.
-    
+
     If you find a brit assign the house red.
     Else if you find a red house assign the brit.
     Else propose the following
         If a house has no british posibilities remove red.
         If a house has no red possibilities remove british.
-        
+
     :param str predicate: The predicate we are looking for.
     :param str with_this: Value to search with.
     :param str predicate: The predicate we will asign.
@@ -30,17 +31,18 @@ def the_person_who_is(predicate, with_this, new_predicate, assign_this, state):
     else:
         return einstein.propose_link(predicate, with_this, new_predicate, assign_this, state)
 
+
 def the_neighbour_of(predicate, with_this, new_predicate, can_have_this, state):
     """
     If the house contains a predicate then the neighbouring house can have
     another predicate
-    
+
     eg.  The man who keeps horses lives next to the one who plays hockey.
-    
-    If this house has horses 
+
+    If this house has horses
     THEN next door can have hockeybut not horses
     AND this house cannot have hockey
-        
+
     :param str predicate: The predicate we are looking for.
     :param str with_this: Value to search with.
     :param str predicate: The predicate we will asign.
@@ -66,17 +68,21 @@ def the_neighbour_of(predicate, with_this, new_predicate, can_have_this, state):
     else: #We don't know where either the hockey or horse live
         return state
 
+
 def rule1(state):
     """The Brit lives in a red house."""
     return the_person_who_is('nationality', 'british', 'house_color', 'red', state)
+
 
 def rule2(state):
     """The Swede keeps dogs."""
     return the_person_who_is('nationality', 'swedish', 'pet', 'dog', state)
 
+
 def rule3(state):
     """The Dane drinks tea."""
     return the_person_who_is('nationality', 'danish', 'drink', 'tea', state)
+
 
 def rule4(state):
     """The green house is on the left of the white house."""
@@ -115,19 +121,23 @@ def rule4(state):
                 # THEN the house to the right cannot be white
                 elif not has_green and white_to_right:
                     state = einstein.remove_value(house_to_right, 'house_color', 'white', state)
-        return state            
+        return state
+
 
 def rule5(state):
     """The green house owner drinks coffee."""
     return the_person_who_is('drink', 'coffee', 'house_color', 'green', state)
 
+
 def rule6(state):
     """The person who plays polo rears birds."""
     return the_person_who_is('sport', 'polo', 'pet', 'bird', state)
 
+
 def rule7(state):
     """The owner of the yellow house plays hockey."""
     return the_person_who_is('house_color', 'yellow', 'sport', 'hockey', state)
+
 
 def rule8(state):
     """The man living in the house right in the center drinks milk."""
@@ -135,7 +145,8 @@ def rule8(state):
         return state
     else:
         return einstein.assign_value('3', 'drink', 'milk', state)
-    
+
+
 def rule9(state):
     """The Norwegian lives in the first house."""
     if einstein.get_position('norweigen', state): # Don't set twice
@@ -143,29 +154,36 @@ def rule9(state):
     else:
         return einstein.assign_value('1', 'nationality', 'norweigen', state)
 
+
 def rule10(state):
     """The man who plays baseball lives next to the man who keeps cats."""
     return the_neighbour_of('sport', 'baseball', 'pet', 'cat', state)
+
 
 def rule11(state):
     """The man who keeps horses lives next to the one who plays hockey."""
     return the_neighbour_of('pet', 'horse', 'sport', 'hockey', state)
 
+
 def rule12(state):
     """The man who plays billiards drinks beer."""
     return the_person_who_is('sport', 'billiards', 'drink', 'beer', state)
+
 
 def rule13(state):
     """The German plays soccer."""
     return the_person_who_is('nationality', 'german', 'sport', 'soccer', state)
 
+
 def rule14(state):
     """The Norwegian lives next to the blue house."""
     return the_neighbour_of('nationality', 'norweigen', 'house_color', 'blue', state)
 
+
 def rule15(state):
     """The man who plays baseball has a neighbor who drinks water."""
     return the_neighbour_of('sport', 'baseball', 'drink', 'water', state)
+
 
 def solve(current_state, rule_order):
     """
@@ -175,24 +193,24 @@ def solve(current_state, rule_order):
     while not einstein.end_solution(current_state):
         # Safe guard to ensure a rules are being applied
         pre_rules_state = current_state
-        print "######  begin iteration", iteration
+        print("######  begin iteration", iteration)
         for rule in rule_order:
             old_state = current_state
-            
+
             # See what changes state
             current_state = rule(current_state)
             if current_state != old_state: #something happened
-                print 'RULE {0} changed state'.format(rule.__doc__)
-            
-            # see if any additional changes can be made    
+                print('RULE {0} changed state'.format(rule.__doc__))
+
+            # see if any additional changes can be made
             current_state = einstein.elimination_sweep(current_state)
-                
-        # Safe guard to ensure a rules are being applied 
+
+        # Safe guard to ensure a rules are being applied
         if current_state == pre_rules_state: #nothing happened
             break
         iteration += 1
     return current_state, iteration - 1
-        
+
 if __name__ == '__main__':
     state = deepcopy(einstein.START_STATE)
     rule_order = [
@@ -201,4 +219,4 @@ if __name__ == '__main__':
     ]
     state, iteration = solve(state, rule_order)
     einstein.print_solution(state)
-    print '\n\nSolved: {0} on iteration {1}'.format(einstein.end_solution(state), iteration)
+    print('\n\nSolved: {0} on iteration {1}'.format(einstein.end_solution(state), iteration))

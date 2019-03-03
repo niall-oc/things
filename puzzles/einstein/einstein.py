@@ -37,8 +37,8 @@ START_STATE['4'] = {
 START_STATE['5'] = {
     'house_color': set(house_colors), 'nationality': set(nationalities),
     'drink': set(drinks), 'sport': set(sports), 'pet': set(pets)
-} 
-        
+}
+
 
 class StateError(Exception):
     pass
@@ -47,43 +47,46 @@ class StateError(Exception):
 def print_solution(state):
     """
     A very simple print function to show the current solution .
-    
+
     :param dict state: The state of the world.
     """
     def pad_values(state):
         """ Specific padding for printing """
-        for house, properties in new_state.iteritems(): # In this house
-            for property, values in properties.iteritems(): # Examine the properties
+        for house, properties in new_state.items(): # In this house
+            for property, values in properties.items(): # Examine the properties
                 for padder in ('....', '...', '..', '.'):
                     if len(values) < 5:
                         values.add(padder)
-                    
-    print '\n\n'
+
+    print('\n\n')
     row = "{0:13s} | {1:13s}| {2:13s}| {3:13s}| {4:13s}| {5:13s}|"
     spacer = "{0}|{0}|{0}|{0}|{0}|{0}|".format('--------------')
     new_state = deepcopy(state)
     pad_values(new_state)
-    
+
     get_property = lambda ps: ps.pop()
-    
+
     def print_row(title, property):
-        print row.format(
-            title,
-            get_property(new_state['1'][property]),
-            get_property(new_state['2'][property]),
-            get_property(new_state['3'][property]),
-            get_property(new_state['4'][property]),
-            get_property(new_state['5'][property])
+        print(
+            row.format(
+                title,
+                get_property(new_state['1'][property]),
+                get_property(new_state['2'][property]),
+                get_property(new_state['3'][property]),
+                get_property(new_state['4'][property]),
+                get_property(new_state['5'][property])
+            )
         )
-        
-    print spacer
+
+    print(spacer)
     for property in ('house_color', 'nationality', 'drink', 'sport', 'pet',):
         print_row(property, property)
         print_row('', property)
         print_row('', property)
         print_row('', property)
         print_row('', property)
-        print spacer
+        print(spacer)
+
 
 def remove_value(position, property, value, state):
     """
@@ -104,13 +107,14 @@ def remove_value(position, property, value, state):
         raise StateError("House %s, %s no values left!", position, property)
     return new_state
 
+
 def assign_value(position, property, value, state):
     """
-    Updates a house's property to be a single value.  
+    Updates a house's property to be a single value.
     Eliminates that value from the same property set in other houses.
-    
+
      - The norweigen lives in the first house.
-    
+
     Therefore he cannot live in any other houses.
 
     :param str position: The key in the state dictionary identifying the house.
@@ -122,10 +126,11 @@ def assign_value(position, property, value, state):
     new_state = deepcopy(state)
     new_state[position][property] = set([value])
     logger.info('Assigned %s %s to house %s', property, value, position)
-    for house, details in new_state.iteritems():
+    for house, details in new_state.items():
         if house != position and value in details[property]:
             new_state = remove_value(house, property, value, new_state)
     return new_state
+
 
 def get_position(value, state):
     """
@@ -137,42 +142,46 @@ def get_position(value, state):
     :param dict state: The current state of the universe.
     :return str or None: The key representing the house or None.
     """
-    for house, properties in state.iteritems():
-        for property, values in properties.iteritems():
+    for house, properties in state.items():
+        for property, values in properties.items():
             if value in values and len(values) == 1:
                 return house
     return None
 
+
 def left_of(house):
     """
     Find the house to the left of this house.
-    
+
     :param str house: the key of the house we are looking at.
     """
     left = str(int(house)-1)
     return left if left in START_STATE.keys() else None
 
+
 def right_of(house):
     """
     Find the house to the right of this house.
-    
+
     :param str house: the key of the house we are looking at.
     """
     right = str(int(house)+1)
     return right if right in START_STATE.keys() else None
 
+
 def next_to(house):
     """
     Find the houses either side of this house.
-    
+
     :param str house: the key of the house we are looking at.
     """
-    return  [h for h in (left_of(house), right_of(house),) if h]
+    return [h for h in (left_of(house), right_of(house),) if h]
+
 
 def last_man_standing(state):
     """
     Generator to find assigned values. There are cases where several assignments
-    leave only one posibility for a property of a house. This is the last man 
+    leave only one posibility for a property of a house. This is the last man
     standing rule. Essentially this is an implicit assignment.
 
     :param dict state: The state of the universe.
@@ -180,7 +189,7 @@ def last_man_standing(state):
     :yield tuple: (house, property, value)
     """
     for house in state.keys(): # look throughe the houses
-        for property, values in state[house].iteritems(): # and properties
+        for property, values in state[house].items(): # and properties
             if len(values) == 1: # if a last man standing is found
                 in_other_house = False # Assume its not in another house
                 val = tuple(values)[0]
@@ -190,11 +199,12 @@ def last_man_standing(state):
                 if in_other_house: # He musn't have been properly assigned
                     yield (house, property, tuple(values)[0],)
 
+
 def elimination_sweep(state):
     """
-    Traverse the state and assert that anything discovered by the last man 
+    Traverse the state and assert that anything discovered by the last man
     standing rule is correctly assigned.
-    
+
     :param dict state: The state of the universe.
     """
     new_state = deepcopy(state)
@@ -202,6 +212,7 @@ def elimination_sweep(state):
         logger.info('LAST MAN STANDING %s, %s, %s', house, property, value)
         new_state = assign_value(house, property, value, new_state)
     return new_state
+
 
 def propose_link(assignee_property, assignee_value, assignment_property, assignment_value, state):
     """
@@ -216,8 +227,8 @@ def propose_link(assignee_property, assignee_value, assignment_property, assignm
     :param dict state: The state of the universe.
     """
     new_state = deepcopy(state)
-    for house, properties in new_state.iteritems(): # In this house
-        for property, values in properties.iteritems(): # Examine the properties
+    for house, properties in new_state.items(): # In this house
+        for property, values in properties.items(): # Examine the properties
 
             if assignee_property == property: # If the property nationality
                 if assignee_value not in values: # But its not the Swede
@@ -231,12 +242,13 @@ def propose_link(assignee_property, assignee_value, assignment_property, assignm
                         new_state = remove_value(house, assignee_property, assignee_value, new_state)
     return new_state
 
+
 def propose_house(positions, property, value, state):
     """
     Proposing a specific house has a property means no other house can have it.
-    
+
      - The house nest to the green house is white.
-    
+
     This means we should ensure white remains in the house_color set for any
     house nest to the green one.
     And ensure white is removed from all other house_color sets.
@@ -248,19 +260,20 @@ def propose_house(positions, property, value, state):
     :return dict: The new state of world.
     """
     new_state = deepcopy(state)
-    for house, properties in new_state.iteritems(): # In this house
+    for house, properties in new_state.items(): # In this house
         if house not in positions:
             new_state = remove_value(house, property, value, new_state)
     return new_state
 
+
 def end_solution(state):
     """
     If every property set has only 1 value left then we have solved the puzzle.
-    
+
     :param dict state: The current state of the world.
     """
-    for house, properties in state.iteritems(): # In this house
-        for property, values in properties.iteritems(): # Examine the properties
+    for house, properties in state.items(): # In this house
+        for property, values in properties.items(): # Examine the properties
             if len(values) > 1:
                 return False
     return True
