@@ -1,5 +1,7 @@
+# Discover the delimiter in bad data
 import unittest
 import delimit
+
 
 class DelimitTest(unittest.TestCase):
     """
@@ -13,7 +15,7 @@ class DelimitTest(unittest.TestCase):
         indexes = delimit.find_delimiter_indexes(line, delimiter=',')
         expected_indexes = [11, 20, 30, 37, 40, 71, 75, 79]
         self.assertEqual(expected_indexes, indexes)
-    
+
     def test_learn_delimiter(self):
         """
         Find the only characters that have a space in every line.
@@ -27,7 +29,7 @@ class DelimitTest(unittest.TestCase):
         indexes = delimit.learn_delimiter(lines, delimiter=' ')
         expected_indexes = [11, 20, 30, 37, 40, 71, 75, 79]
         self.assertEqual(expected_indexes, indexes)
-        
+
     def test_delimit_indexes(self):
         """
         After learning the indexes of potential delimiters, mark those positions with the delimiter
@@ -47,4 +49,3 @@ class DelimitTest(unittest.TestCase):
         indexes = delimit.learn_delimiter(lines, delimiter=' ')
         new_lines = delimit.delimit_indexes(lines, indexes, delimiter=',')
         self.assertEqual(new_lines, expected_lines)
-
