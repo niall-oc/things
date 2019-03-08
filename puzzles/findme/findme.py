@@ -1,23 +1,24 @@
 # -*- coding: utf-8 -*-
 from random import random, seed
+import logging
 
-TOP_LEFT = None
-BOTTOM_RIGHT = None
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
-def validate_entity(entity):
+def validate_entity(entity, config):
     """
     If no bounds or entities are properly defined.
     OR
     If the entities are out of bounds.
     """
-    if any([entity[0] < TOP_LEFT[0], entity[1] < TOP_LEFT[1],
-            entity[0] > BOTTOM_RIGHT[0], entity[1] > BOTTOM_RIGHT[0]]):
+    if any([entity[0] < config['top_left'][0], entity[1] < config['top_left'][1],
+            entity[0] > config['bottom_right'][0], entity[1] > config['bottom_right'][0]]):
         return False
     return True
 
 
-def get_move(entity):
+def get_move(entity, config):
     """
     Given a grid X by Y blocks insize a new move must respect the following.
 
@@ -28,30 +29,29 @@ def get_move(entity):
     move_x = bool(random() > .5)
     move = 1 if bool(random() > .5) else -1
     if move_x:
-        new_entity = (entity[0] + move, entity[1])
-        if not validate_entity(new_entity):
-            new_entity = (entity[0] - move, entity[1])
+        new_entity = [entity[0] + move, entity[1]]
+        if not validate_entity(new_entity, config):
+            new_entity = [entity[0] - move, entity[1]]
     else:
-        new_entity = (entity[0], entity[1] + move)
-        if not validate_entity(new_entity):
-            new_entity = (entity[0], entity[1] - move)
+        new_entity = [entity[0], entity[1] + move]
+        if not validate_entity(new_entity, config):
+            new_entity = [entity[0], entity[1] - move]
     return new_entity
 
 
-def start_game(top_left, bottom_right, man, flag):
+def start_game(config):
     """
     Will keep going until the man finds the flag
     """
-    global TOP_LEFT, BOTTOM_RIGHT
     seed()
-    TOP_LEFT = top_left
-    BOTTOM_RIGHT = bottom_right
-    if validate_entity(man) and validate_entity(flag):
+    if validate_entity(config['man'], config) and validate_entity(config['flag'], config):
 
-        move_trace = [man]
-        while man != flag:
-            man = get_move(man)
-            move_trace.append(man)
+        move_trace = [config['man']]
+        new_man = get_move(config['man'], config)
+        while new_man != config['flag']:
+            logger.info("%s %s", new_man, config['flag'])
+            move_trace.append(new_man)
+            new_man = get_move(new_man, config)
         return move_trace
 
     else:
@@ -60,36 +60,21 @@ def start_game(top_left, bottom_right, man, flag):
 
 if __name__ == '__main__':
     import sys
-    import getopt
+    import json
 
-    try:
-        opts, args = getopt.getopt(sys.argv[1:], "t:b:m:f:p:", ["topleft=", "bottomright", "man=", "flag=", "paths="])
-    except getopt.GetoptError:
-        print('\nUsage: findme.py -t <top left> -b <bottom right> -m <man> -f <flag>\n\neg python findme.py -t0,0 -b3,3 -m1,0 -f3,3')
-        sys.exit(2)
-    tl = None
-    br = None
-    man = None
-    flag = None
-    for opt, arg in opts:
-        if opt in ('-t', '--topleft'):
-            tl = tuple([int(i) for i in arg.split(',')])
-        if opt in ('-b', '--bottomright'):
-            br = tuple([int(i) for i in arg.split(',')])
-        if opt in ('-m', '--man'):
-            man = tuple([int(i) for i in arg.split(',')])
-        if opt in ('-f', '--flag'):
-            flag = tuple([int(i) for i in arg.split(',')])
-        if opt in ('-p', '--paths'):
-            paths = int(arg)
+    logger.info("BEGINING")
+    with open("/home/niall/Software/things/puzzles/findme/config.json", "r") as f:
+        config = json.loads(f.read())
 
-    results = [len(start_game(tl, br, man, flag)) for i in range(paths)]
+    logger.info("CONFIG : %s", config['flag'])
+
+    results = [len(start_game(config)) for i in range(config['paths'])]
     print()
     print('Max', max(results))
     print('Min', min(results))
-    avg = sum(results)/paths
-    print('Avg', avg)
+    avg = sum(results)/config['paths']
+    print('Avg : %s' % avg)
     dev = [abs(avg-i) for i in results]
-    print('Dev', dev)
-    stv = sum(dev)/paths
-    print('Stv', stv)
+    # print('Dev : %s' % dev)
+    stv = sum(dev)/config['paths']
+    print('Stv : %s' % stv)

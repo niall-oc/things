@@ -1,0 +1,7 @@
+{
+    "top_left": [0,0],
+    "bottom_right": [3,3],
+    "man": [2,2],
+    "flag": [0,1],
+    "paths": 2000
+}
