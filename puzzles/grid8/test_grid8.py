@@ -19,6 +19,7 @@ RULES:
 import unittest
 import grid8
 
+
 class Grid8Test(unittest.TestCase):
     def test_assign_to_grid(self):
         """

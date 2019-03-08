@@ -18,6 +18,7 @@ RULES:
 
 import grid8
 
+
 def solve(state):
     """
     Recursive solution that uses a brute force approach to findindg the solution.
@@ -49,13 +50,13 @@ def solve(state):
     # Derive the number of empty spaces left and the choices remaining to go on the board
     empty_spaces = [g for g, v in state.items() if v is None]
     numbers_used = [v for g, v in state.items() if v]
-    numbers_left = [n for n in (1,2,3,4,5,6,7,8,) if n not in numbers_used]
+    numbers_left = [n for n in (1, 2, 3, 4, 5, 6, 7, 8,) if n not in numbers_used]
 
-    ### BASE CASE
+    # BASE CASE
     if not empty_spaces:
         return state
 
-    ### RECURSIVE CASE
+    # RECURSIVE CASE
     while empty_spaces:
         # Treat the remaining options like a stack
         grid_square = empty_spaces.pop(0) # Grab the next space available
@@ -67,12 +68,12 @@ def solve(state):
 
                 # Make a new state by assiging a number
                 new_state = grid8.assign_to_grid(grid_square, value, state)
-                ### RECURSION
+                # RECURSION
                 # Try to solve things from this state
                 # Remember, if the base above is returned then this is where we will catch it.
                 new_state = solve(new_state)
 
-                if new_state: # return the solution
+                if new_state:  # return the solution
                     return new_state
                 # If the state was none we will implicitly try the remaining numbers or spaces
                 # in this branch of the solution tree.
@@ -94,12 +95,12 @@ if __name__ == "__main__":
     +---+---+\n"""
 
     # Cycle through all the possible starting points to see how many solutions there are.
-    for start in (1,2,3,4,5,6,7,8,):
+    for start in (1, 2, 3, 4, 5, 6, 7, 8,):
         # Assign a starting point.
         new_state = grid8.assign_to_grid((1, 2,), start, grid8.GRID)
         # try to solve from here
         solution = solve(new_state)
 
-        if solution: # print a solution if we got one
+        if solution:  # print a solution if we got one
             values = [solution[k] for k in sorted(solution.keys())]
-            print board.format(*values)
+            print(board.format(*values))

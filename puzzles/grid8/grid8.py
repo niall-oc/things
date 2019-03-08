@@ -16,7 +16,7 @@ RULES:
     Each number may only be used once.
 """
 
-from   copy import deepcopy
+from copy import deepcopy
 
 # Operating on the premise that a gird is in reality a collection of x,y coordinates.
 # A grid state could be
@@ -33,15 +33,16 @@ from   copy import deepcopy
 # At the begining of the game no number is assigned to any position on the grid.
 
 GRID = {
-    (1,2,): None,
-    (1,3,): None,
-    (2,1,): None,
-    (2,2,): None,
-    (2,3,): None,
-    (2,4,): None,
-    (3,2,): None,
-    (3,3,): None
+    (1, 2,): None,
+    (1, 3,): None,
+    (2, 1,): None,
+    (2, 2,): None,
+    (2, 3,): None,
+    (2, 4,): None,
+    (3, 2,): None,
+    (3, 3,): None
 }
+
 
 def find_neighbours(cell):
     """
@@ -58,6 +59,7 @@ def find_neighbours(cell):
             neighbours.add((x_comp, y_comp))
     neighbours.remove(cell)
     return neighbours
+
 
 def assignment_valid(grid_square, value, state):
     """
@@ -86,6 +88,7 @@ def assignment_valid(grid_square, value, state):
         ]
     )
     return is_valid
+
 
 def assign_to_grid(grid_square, value, state):
     """
