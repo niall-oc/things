@@ -5,25 +5,16 @@ Each solution achives an over all score of 100%
 
 # https://app.codility.com/programmers/lessons/1-iterations/binary_gap/
 def solution(N):
-    bits = "{0:b}".format(N)
+    # write your code in Python 3.6
+    gaps = []
     count = 0
-    max = 0
-    open = False
-    for b in bits:
-        # requires a '1' to open and close
-        if not open:
-            if b == '0':
-                open = True
-                count += 1
-        elif open:
-            if b == '0':
-                count += 1
-            else:
-                open = False
-                if count > max:
-                    max = count
-                count = 0
-    return max
+    for b in "{0:b}".format(N):
+        if b == '1':
+            gaps.append(count)
+            count = 0
+        else:
+            count += 1
+    return max(gaps)
 
 # https://app.codility.com/programmers/lessons/2-arrays/odd_occurrences_in_array/
 def solution(A):
