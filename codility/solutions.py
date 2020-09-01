@@ -36,6 +36,14 @@ def solution(A):
             min_difference = diff
     return min_difference
 
+# https://app.codility.com/programmers/lessons/3-time_complexity/perm_missing_elem/
+def solution(A):
+    # n(n+1) /2 == sum(n)
+    total = sum(A)
+    n = len(A) + 1 #We know one number is missing!
+    expected = int((n*(n+1))/2)
+    return expected - total
+
 # https://app.codility.com/programmers/lessons/4-counting_elements/perm_check/
 def solution(A):
     num = len(A)
