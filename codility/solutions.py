@@ -139,6 +139,12 @@ def solution(A, B, K):
  
     return ((B - remove) // K) + 1
 
+# https://app.codility.com/programmers/lessons/5-prefix_sums/count_div/
+def solution(A, B, K):
+    # if A, B,K are already valid inputs!
+    return ((B // K) + 1) - ((A + K -1) // K)
+
+
 # https://app.codility.com/programmers/lessons/6-sorting/distinct/
 def solution(A):
     return len(set(A))
