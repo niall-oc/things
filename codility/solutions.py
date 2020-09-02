@@ -127,6 +127,18 @@ def solution(X, Y, D):
         hops += 1
     return hops
 
+# https://app.codility.com/programmers/lessons/5-prefix_sums/count_div/
+def solution(A, B, K):
+    if B < A or K <= 0:
+        raise Exception("Invalid Input")
+ 
+    remove =  ((A + K -1) // K) * K
+ 
+    if remove > B:
+      return 0
+ 
+    return ((B - remove) // K) + 1
+
 # https://app.codility.com/programmers/lessons/6-sorting/distinct/
 def solution(A):
     return len(set(A))
