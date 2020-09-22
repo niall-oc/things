@@ -103,12 +103,12 @@ def solution(N, A):
 
 # https://app.codility.com/programmers/lessons/6-sorting/max_product_of_three/
 def solution(A):
-    r = max(A)
-    r_index = A.index(r)
-    q = max(A[:r_index])
-    q_index = A.index(q)
-    p = max(A[:q_index])
-    return p*q*r
+    # write your code in Python 3.6
+    A.sort()
+    l = len(A)
+    if l == 3:
+        return A[0] * A[1] * A[2]
+    return max(A[0] * A[1] * A[-1], A[-1] * A[-2] * A[-3])
 
 # https://app.codility.com/programmers/lessons/2-arrays/cyclic_rotation/
 def solution(A, K):
