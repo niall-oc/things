@@ -358,3 +358,27 @@ def solution(A):
                     equi_leader_count += 1
             return equi_leader_count
     return 0
+
+
+# not complete max double slice
+def max_slice(A):
+    if A:
+        base = min(A)
+        ending = 0
+        max_slice = base
+        for a in A:
+            ending = max(base, ending + a)
+            max_slice = max(max_slice, ending)
+        return max_slice
+    return 0
+
+def solution(A):
+    n=len(A)
+    x=0
+    y=x+1
+    z=n-1
+    maximal_sum = 0
+    for j in range(y+1,z):
+        for i in range(y,j):
+            maximal_sum = max(maximal_sum, max_slice(A[x+1:y]) + max_slice(A[y:z]))
+    return maximal_sum
