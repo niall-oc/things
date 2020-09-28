@@ -366,14 +366,17 @@ def max_slice(A, start, end):
     for i in range(start, end):
         ending = max(0, ending + A[i])
         max_slice = max(max_slice, ending)
+    #print(A, A[start:end], start, end, '--', max_slice)
     return max_slice
 
 def solution(A):
     n=len(A)
-    x=0
-    z=n-1 # end of list
-    maximal_sum = 0
-    for j in range(x+1,z): # from y up to Z
-        for i in range(x,j):
-            maximal_sum = max(maximal_sum, max_slice(A, i+1, j) + max_slice(A, j+1, z))
-    return maximal_sum
+    max_double_slice = 0
+    #Split the list at every valid midpoint and calculate the max slice on each side.
+    for i in range(1, n-1):
+        left = max_slice(A, 1, i)
+        right = max_slice(A, i+1, n-1)
+        #print("1:%d = %d -- %d:%d = %d"%(i-1, left, i+1, n-1, right))
+        max_double_slice = max(max_double_slice, left+right)
+        #print(max_double_slice, '\n')
+    return max_double_slice
