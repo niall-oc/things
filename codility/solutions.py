@@ -398,7 +398,7 @@ def solution(A):
         moves[i] = A[i] - A[i-1]
     return max_slice_prof(moves, 0, n)
 
-#https://app.codility.com/programmers/lessons/9-maximum_slice_problem/max_slice_sum/
+# https://app.codility.com/programmers/lessons/9-maximum_slice_problem/max_slice_sum/
 def solution(A):
     base = min(A)
     ending = 0
@@ -407,3 +407,18 @@ def solution(A):
         ending = max(base, ending + a, a)
         max_slice = max(max_slice, ending)
     return max_slice
+
+# https://app.codility.com/programmers/lessons/10-prime_and_composite_numbers/count_factors/
+def solution(N):
+    # write your code in Python 3.6
+    R = int(N**.5)
+    result = 0
+    
+    for i in range(1, R+1):
+        if not N%i:
+            result = result + 2
+    
+    if R*R == N:
+        result = result - 1
+        
+    return result
