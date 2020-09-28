@@ -360,23 +360,23 @@ def solution(A):
     return 0
 
 #https://app.codility.com/programmers/lessons/9-maximum_slice_problem/max_double_slice_sum/
-def max_slice(A, start, end):
-    ending = 0
-    max_slice = 0
-    for i in range(start, end):
-        ending = max(0, ending + A[i])
-        max_slice = max(max_slice, ending)
-    #print(A, A[start:end], start, end, '--', max_slice)
-    return max_slice
-
 def solution(A):
-    n=len(A)
-    max_double_slice = 0
-    #Split the list at every valid midpoint and calculate the max slice on each side.
-    for i in range(1, n-1):
-        left = max_slice(A, 1, i)
-        right = max_slice(A, i+1, n-1)
-        #print("1:%d = %d -- %d:%d = %d"%(i-1, left, i+1, n-1, right))
-        max_double_slice = max(max_double_slice, left+right)
-        #print(max_double_slice, '\n')
-    return max_double_slice
+    n = len(A)
+    max_starts = [0]*n
+    max_ends = [0]*n
+    
+    max_sum = 0
+    for i in range(n-2, 0, -1):          
+        max_sum = max(0, max_sum+A[i])
+        max_ends[i] = max_sum
+    
+    max_sum = 0
+    for i in range(1, n-1):          
+        max_sum = max(0, max_sum+A[i])
+        max_starts[i] = max_sum
+    
+    max_sum = 0
+    for i in range(0, n-2):
+        max_sum = max(max_sum, max_starts[i] + max_ends[i+2])
+
+    return max_sum;
