@@ -359,26 +359,21 @@ def solution(A):
             return equi_leader_count
     return 0
 
-
-# not complete max double slice
-def max_slice(A):
-    if A:
-        base = min(A)
-        ending = 0
-        max_slice = base
-        for a in A:
-            ending = max(base, ending + a)
-            max_slice = max(max_slice, ending)
-        return max_slice
-    return 0
+#https://app.codility.com/programmers/lessons/9-maximum_slice_problem/max_double_slice_sum/
+def max_slice(A, start, end):
+    ending = 0
+    max_slice = 0
+    for i in range(start, end):
+        ending = max(0, ending + A[i])
+        max_slice = max(max_slice, ending)
+    return max_slice
 
 def solution(A):
     n=len(A)
     x=0
-    y=x+1
-    z=n-1
+    z=n-1 # end of list
     maximal_sum = 0
-    for j in range(y+1,z):
-        for i in range(y,j):
-            maximal_sum = max(maximal_sum, max_slice(A[x+1:y]) + max_slice(A[y:z]))
+    for j in range(x+1,z): # from y up to Z
+        for i in range(x,j):
+            maximal_sum = max(maximal_sum, max_slice(A, i+1, j) + max_slice(A, j+1, z))
     return maximal_sum
