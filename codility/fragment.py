@@ -16,6 +16,7 @@ def split_solutions(text, delimiter="# https:"):
 		start = end
 		end = text.find(delimiter, end+1)
 
+
 if __name__ == '__main__':
 	with open('solutions.py') as f:
 		split_solutions(f.read(), delimiter="# https:")
