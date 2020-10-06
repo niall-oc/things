@@ -15,7 +15,6 @@ def prime_reduce(n, gcd):
     return prime_reduce(na, ngcd)
 
 def solution(A, B):
-    # A sieve to cover both number ranges
     Z = len(A)
     result = 0
     for i in range(0, Z):
