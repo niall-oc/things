@@ -32,23 +32,21 @@ def solution(A):
     # A.append(1) # mark final jump
     fn = sorted(gen_fib(100000)[2:]) # Fib numbers with 0, 1, 1, 2..  clipped to just 1, 2..
     # print(fn)
-    paths = {0:set([-1])} # locate all the leaves that are one fib jump from the start position.
-    result = 0
+    paths = set([-1]) # locate all the leaves that are one fib jump from the start position.
 
     jump = 1
     while True:
         # Considering each of the previous jump positions - How many leaves from there are one fib jump away
-        new_jumps =  set([idx for pos in paths[jump-1] for idx in new_paths(A, n, pos, fn)])
+        paths =  set([idx for pos in paths for idx in new_paths(A, n, pos, fn)])
 
         # no new jumps means game over!
-        if not new_jumps:
+        if not paths:
             break
-        # else update the paths
-        paths[jump] = new_jumps
 
         # If there was a result in the new jumps record that
-        if n in new_jumps:
+        if n in paths:
             return jump
+            
         jump += 1
 
     return -1
