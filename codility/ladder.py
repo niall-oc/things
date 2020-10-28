@@ -49,9 +49,9 @@ def solution(A, B):
 
     # precompute B for speed on large arrays.
 
-    pB = {i: 2**i for i in range(1, 31)}
+    pB = {i: (2**i) -1 for i in range(1, 31)}
 
-    result = [fn_series[A[i]]&(pB[B[i]]-1) for i in range(n)]
+    result = [fn_series[A[i]]&(pB[B[i]]) for i in range(n)]
     # https://stackoverflow.com/questions/6670715/mod-of-power-2-on-bitwise-operators/6670766#6670766
     # Best explains why bitwise & is faster than mod for this calculation.
     return result
