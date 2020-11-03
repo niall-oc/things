@@ -9,15 +9,14 @@ def solution(A):
     if num_peaks < 3:
         return num_peaks # with less than 3 peaks all flags can be placed
     
-    max_flags  = int(len(A)**.5) # Cover the case of packed flags by adding 2
+    max_flags  = int((peaks[-1]-peaks[0])**.5) # Cover the case of packed flags by adding 2
     
     # limit to trying optimal attempts, don't waste cycles trying 3,4,... etc if the most will be likely 300 flags
-    spread = 3
-    flag_attempts = range( min(3, num_peaks, max_flags-spread), min(num_peaks+1, max_flags+spread) )
-
+    flag_attempts = range(max_flags+1, 0, -1)
+    # print(n, max_flags, num_peaks)
     most_flags = 0
     for attempt in flag_attempts: # we are limited from 3 to max flags or num peaks
-        
+        print(attempt)
         flag_count = 1 # place flag at first peak
         next_flag = peaks[0] + attempt # reset the position of the next_flag for this attempt
         for p in peaks:
@@ -28,7 +27,10 @@ def solution(A):
             if flag_count >= attempt: # when you run out of flags
                 break
 
-        most_flags = max(flag_count, most_flags) # We will take the most flags that can be set please!
+        if flag_count >= most_flags:
+            most_flags = flag_count
+        else:
+            return most_flags # Stop when the solution starts to deteriorate!
     return most_flags
 
 if __name__ == '__main__':
@@ -36,6 +38,7 @@ if __name__ == '__main__':
         (1, ([0,0,1,0,0],)),
         (4, ([0,0,1,0,0,1,0,0,1,0,0,0,1,0,0,0,1,0],)),
         (9, ([0]+[1,0]*36+[0]*30+[1,0],)),
+        (632, ([0]+[1,0]*200000+[0],)),
     )
     for expected, args in tests:
         tic = time.perf_counter()
