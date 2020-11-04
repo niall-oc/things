@@ -27,24 +27,18 @@ def solution(A):
     
     # determine the divisors of len(A)
     h_div = int(N**.5)
-
-    # The union of all divisors is created and sorted. Starting with the smallest divisor 
-    # divides into the max even parts first in order to find a solution quickest.
-    divisors = sorted({N} | { i for i in range(h_div, 1, -1) if not N%h_div } | { N//i for i in range(h_div, 1, -1) if not N%h_div })
+    divisors = sorted({N} | {i for i in range(h_div, 1, -1) if not N%i} | {N//i for i in range(h_div, 1, -1) if not N%i}, reverse=True)
 
     # print(N, divisors, scan)
-    for d in divisors: # Begin the search
-        # get the start and end peak count from each chunk
-        chunks = tuple(get_chunks(scan, d))
-        result = len(chunks)
-        # print(result, chunks)
-        # for all chunks if either a peak occurs within the cunk OR the begining of the chunk is a peak!
-        peaks = [(chunks[i][-1]-chunks[i][0]) or chunks[i][0] > chunks[max(i-1,0)][-1] for i in range(result)]
-        
-        if all(peaks): # if every chunk has a peak and this is the most chunks we can break the Array into!
+    result = 0
+    for d in divisors:
+        chunks = [(c[0], c[-1]) for c in get_chunks(scan, d)]
+        # for all chunk if either a peak occurs  OR  the begining of the chunk is a peak!
+        peaks = [(chunks[i][-1]-chunks[i][0]) or chunks[i][0] > chunks[max(i-1,0)][-1] for i in range(len(chunks))]
+        if all(peaks):
             # print(chunks, peaks)
-            return result
-    return 0
+            result = max(result, len(chunks))
+    return result
 
 if __name__ == '__main__':
     tests = (
