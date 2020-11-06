@@ -1,5 +1,5 @@
 # https://app.codility.com/programmers/lessons/10-prime_and_composite_numbers/peaks/
-# 72% solution
+# https://app.codility.com/demo/results/training5KP2PK-P4M/
 import time
 
 def get_chunks(lst, n):
@@ -20,7 +20,7 @@ def solution(A):
             scan[i] = scan[i-1] + 1
         else:
             scan[i] = scan[i-1]
-    scan[-1] = scan[-2] # tag last
+    scan[-1] = scan[-2] # tag last indexes
     
     if scan[0] == scan[-1]: # if no peaks occur then exit
         return 0
