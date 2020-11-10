@@ -14,24 +14,16 @@ def solution(A):
     n = len(A)
     A.sort()
 
-    if n==1:
-        return abs( A[0] + A[0] )
-
-    head = 0
+    head = n-1
     tail = 0
-    m = minimal = abs( A[tail] + A[head] )
-    # Walk along the sorted array and search for a minimal
-    for tail in range(n):
-
-        m = abs( A[tail] + A[head] )
-        # print(f'{m} = abs( {A[tail]} + {A[head]} ) [{tail}:{head}] -> {A[tail:(head+1)]}')
-        while m <= minimal and head < n-1:
-            head += 1
-            m = abs( A[tail] + A[head] )
-        
-        minimal = min(m, minimal)
-
-    return minimal
+    m = 2000000000
+    while tail <= head:
+        m = min(m, abs( A[tail] + A[head] ))
+        if abs(A[tail]) > abs(A[head]) : # This will decide how to move the catepillar
+            tail +=1
+        else:
+            head -= 1
+    return m
 
 if __name__ == '__main__':
     tests = (
