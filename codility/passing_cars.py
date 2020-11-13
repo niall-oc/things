@@ -3,6 +3,8 @@
 """
 Author: Niall O'Connor
 
+# https://app.codility.com/programmers/lessons/5-prefix_sums/passing_cars/
+
 A non-empty array A consisting of N integers is given. The consecutive 
 elements of array A represent consecutive cars on a road.
 
@@ -49,12 +51,17 @@ Write an efficient algorithm for the following assumptions:
         each element of array A is an integer that can have one of the following 
         values: 0, 1.
 
-# 100% solution https://app.codility.com/demo/results/trainingS5F3UM-ER7/
+# 100% solution https://app.codility.com/demo/results/trainingZHN46P-DNM/
 """
 
 import time
 
+
 def solution(A):
+    """
+    For any car C travelling east the total remaining cars travelling west is equal
+    to the number of passings occurring for  C.
+    """
     n = len(A)
     if n<2:
         return 0
