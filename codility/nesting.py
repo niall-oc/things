@@ -3,34 +3,32 @@
 """
 Author: Niall O'Connor
 
-# https://app.codility.com/programmers/lessons/7-stacks_and_queues/brackets/
+# https://app.codility.com/programmers/lessons/7-stacks_and_queues/nesting/
 
-A string S consisting of N characters is considered to be properly nested if 
-any of the following conditions is true:
+A string S consisting of N characters is called properly nested if:
 
         S is empty;
-        S has the form "(U)" or "[U]" or "{U}" where U is a properly nested string;
+        S has the form "(U)" where U is a properly nested string;
         S has the form "VW" where V and W are properly nested strings.
 
-For example, the string "{[()()]}" is properly nested but "([)()]" is not.
+For example, string "(()(())())" is properly nested but string "())" isn't.
 
 Write a function:
 
     def solution(S)
 
-that, given a string S consisting of N characters, returns 1 if S is properly 
-nested and 0 otherwise.
+that, given a string S consisting of N characters, returns 1 if string S is 
+properly nested and 0 otherwise.
 
-For example, given S = "{[()()]}", the function should return 1 and given 
-S = "([)()]", the function should return 0, as explained above.
+For example, given S = "(()(())())", the function should return 1 and given 
+S = "())", the function should return 0, as explained above.
 
 Write an efficient algorithm for the following assumptions:
 
-        N is an integer within the range [0..200,000];
-        string S consists only of the following characters: 
-        "(", "{", "[", "]", "}" and/or ")".
+        N is an integer within the range [0..1,000,000];
+        string S consists only of the characters "(" and/or ")".
 
-# 100% solution https://app.codility.com/demo/results/trainingUMGUQH-FTX/
+# 100% solution https://app.codility.com/demo/results/trainingNUEHPR-QAA/
 """
 
 import time
@@ -43,15 +41,16 @@ def solution(S):
     If the stack is populated at the end there are too many opening brackets.
     """
     stack = []
-    openers, closers = '{[(', '}])'
+    opener, closer = '(', ')'
     for char in S:
-        if char in openers:
+        if char == opener:
             stack.append(char)
         else:
             # if there is a mismatch or an empty stack for a closing char its a fail
-            if not stack or openers.index(stack.pop()) != closers.index(char):
+            if not stack:
                 return 0
-
+            else:
+                stack.pop()
     return 0 if stack else 1
 
 
@@ -59,8 +58,8 @@ if __name__ == '__main__':
 
     tests = (
         # Test cases are in pairs of (expected, (args,))
-        (1, ("{[()()]}",)),
-        (0, ("([)()]",)),
+        (1, ("(()(())())",)),
+        (0, ("())",)),
     )
 
     for expected, args in tests:
