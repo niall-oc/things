@@ -57,7 +57,8 @@ L is an integer within the range [1..50,000];
 each element of array A is an integer within the range [1..L];
 each element of array B is an integer within the range [1..30].
 
-
+100% solution # https://app.codility.com/demo/results/trainingFBCNGQ-X7B/
+O(L)
 """
 
 import time
@@ -106,7 +107,6 @@ def solution(A, B):
     The answer is in fact:  The number of ways to climb a ladder ( in 1 or 2
     step combinations) is the same as fib(n-1) That implies you must shift the
     offset your fn series to get the correct number!
-
     """
 
     # A and B are equal length
