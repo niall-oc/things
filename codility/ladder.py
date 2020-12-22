@@ -1,4 +1,66 @@
+# -*- coding: utf-8 -*-
+"""
+Author: Niall O'Connor
+
 # https://app.codility.com/programmers/lessons/13-fibonacci_numbers/ladder/
+
+You have to climb up a ladder. The ladder has exactly N rungs, numbered from 1
+to N. With each step, you can ascend by one or two rungs. More precisely:
+
+with your first step you can stand on rung 1 or 2,
+if you are on rung K, you can move to rungs K + 1 or K + 2,
+finally you have to stand on rung N.
+Your task is to count the number of different ways of climbing to the top of the
+ladder.
+
+For example, given N = 4, you have five different ways of climbing, ascending by:
+
+1, 1, 1 and 1 rung,
+1, 1 and 2 rungs,
+1, 2 and 1 rung,
+2, 1 and 1 rungs, and
+2 and 2 rungs.
+Given N = 5, you have eight different ways of climbing, ascending by:
+
+1, 1, 1, 1 and 1 rung,
+1, 1, 1 and 2 rungs,
+1, 1, 2 and 1 rung,
+1, 2, 1 and 1 rung,
+1, 2 and 2 rungs,
+2, 1, 1 and 1 rungs,
+2, 1 and 2 rungs, and
+2, 2 and 1 rung.
+The number of different ways can be very large, so it is sufficient to return
+the result modulo 2P, for a given integer P.
+
+Write a function:
+
+def solution(A, B)
+
+that, given two non-empty arrays A and B of L integers, returns an array
+consisting of L integers specifying the consecutive answers; position I should
+contain the number of different ways of climbing the ladder with A[I] rungs
+modulo 2B[I].
+
+For example, given L = 5 and:
+
+    A[0] = 4   B[0] = 3
+    A[1] = 4   B[1] = 2
+    A[2] = 5   B[2] = 4
+    A[3] = 5   B[3] = 3
+    A[4] = 1   B[4] = 1
+the function should return the sequence [5, 1, 8, 0, 1], as explained above.
+
+Write an efficient algorithm for the following assumptions:
+
+L is an integer within the range [1..50,000];
+each element of array A is an integer within the range [1..L];
+each element of array B is an integer within the range [1..30].
+
+
+"""
+
+import time
 
 def gen_fib(n):
     fn = [0] * n
@@ -9,33 +71,41 @@ def gen_fib(n):
 
 def solution(A, B):
     """
-    The different arangements or combinations of adding 1 or 2 to get a number is also the fibonacci sequence!
+    The different arangements or combinations of adding 1 or 2 to get a number
+    is also the fibonacci sequence!
 
-    Consider the number of ways 5 can be created from using combinatinos 1 or 2:
+    Consider the number of ways 5 can be created from using combinatinos 1 or 2.
+    
+    If you choose 2 first then:
+        2 + (1+1+1) or 2 + (2+1) or 2 + (1+2)
+    are all possible solutions.
 
-        2 + (1+1+1), 2 + (2+1), 2 + (1+2)
-
-    hmmm This looks like 2 + the 3 combinations you can make 3 from 1 or 2.
-
-        1 + (1+1+1+1), 1 + (2+2), 1 + (1+2+1), 1 + (2+1+1), 1 + (1+1+2)
-
-    and that looks like 1 + the 5 combinations you can make 4 from!
+    More formally the number 2 + the number of combinations for making 3 from
+    the numbers 2 or 1!
+    
+    If you choose 1 first when trying to make 5 then:
+        1 + (1+1+1+1) or 1 + (2+2) or 1 + (1+2+1) or 1 + (2+1+1) or 1 + (1+1+2)
+    are all possible solutions.
+    
+    More formally the number 1 + the 5 combinations you can make 4 from!
 
     8 combinations = 3 combinations + 5 combinations!
 
     so f(n) = f(n-2) + f(n-1). . . !
 
-    Thats the fibonacci sequence!  But 0, 1 and 2 are special cases
+    That's the fibonacci sequence! but with an offset.
 
-    0 = 0
+    0 = choose nothing to make zero with is technically 1 way!
 
-    1 = 1 + (0)  and 2+??  you cannot use 2 at all.  Technically thats a total of 0 combinations but the answer is 1
-    2 = 2 + (0) and 1+(1)  Technically thats a total of 1 combinations ( after considering having 1 or 2 at the start)
+    1 = 1 there is only 1 solution to make 1
+    2 = 2 +(0) or 1+(1) choose 2 first or 1 and the number of ways to make 1.
 
-    While both those cases are fibonacci correct they don't fit the problem exactly.
+    0, 1, 2, 3, 4, 5,  6,  7,  8 etc.
+    1, 1, 2, 3, 5, 8, 13, 21, 34 etc. 
 
-    The answer is in fact:  The number of ways to climb a ladder ( in 1 or 2 step combinations) is the same as fib(n-1)
-    That implies you must shift the offset your fn series to get the correct number!
+    The answer is in fact:  The number of ways to climb a ladder ( in 1 or 2
+    step combinations) is the same as fib(n-1) That implies you must shift the
+    offset your fn series to get the correct number!
 
     """
 
@@ -63,8 +133,15 @@ if __name__ == '__main__':
         ([2, 3, 2, 1] , ([2, 3, 2, 4], [2, 2, 3, 2])),
     )
     for expected, args in tests:
+        tic = time.perf_counter()
         res = solution(*args)
+        toc = time.perf_counter()
+        
+        if expected is None:
+            print(f'SPEED-TEST {len(args[0])} args finished in {toc - tic:0.8f} seconds')
+            continue # This is just a speed test
+        print(f'ARGS produced {res} in {toc - tic:0.8f} seconds')
         try:
             assert(expected == res)
         except AssertionError as e:
-            print(expected, args, res)
+            print(f'ERROR {args} produced {res} when {expected} was expected!')
