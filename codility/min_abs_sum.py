@@ -53,35 +53,27 @@ def solution(A):
     if n < 2: # quick base case
         return 0 if not n else A[0]
     
-    # Set all values to absolute
+    # Set all values to absolute and total the array in one pass.
+    maximum = 0
     for i in range(n):
         A[i] = abs(A[i])
+        maximum += A[i]
 
-    # Working with a sorted array means we are working with the lowest 
-    # possible value at each iteration which simplifies things.
+    # Array 
     A.sort()
 
-    maximum = sum(A)
     mid_point = maximum // 2
+    left = right = 0
 
-    balanced = not bool(maximum - (2*mid_point))
-    
-    left = 0
-    right = 0
-
-    # print(f'balanced: {balanced}, maximum: {maximum}, mid_point: {mid_point}, A:{A} ')
+    print(f'\nmaximum: {maximum}, mid_point: {mid_point}, A:{A} ')
 
     for i in range(n-1, -1, -1):
-        if right + A[i] <= mid_point:
+        if right + A[i] <= mid_point or right < left:
             right += A[i]
-        elif left + A[i] <= mid_point:
-            left += A[i]
         else:
-            if left < right:
-                left += A[i]
-            else:
-                right += A[i]
-    # print(f'left: {left}, right: {right}')
+            left += A[i]
+    
+    print(f'left: {left}, right: {right}')
 
     return min(
         abs((maximum - right) - right),
@@ -99,7 +91,10 @@ if __name__ == '__main__':
         (0, ([2, 3, 2, 2, 3],)),
         (0, ([1, 5, -2, 5, 2, 3],)),
         (0, ([5, 5, 5, 4, 3, 3, 2, 2, 2, 2, 2, 2, 1, 1, 1],)),
-        (1, ([20, 13, 3, 3, 3, 3],)),
+        (0, ([7, 5, 7, 5, 7, 5, 3, 1, -2],)),
+        (1, ([6, 9, -6, 9, 9, -6, 9, -9, 6, 0, 6, 6, 4, 6, 6],)),
+        (2, ([48, 12, 12, 6, 6, 6, 6, 1, 3],)),
+        (36, ([67, 7, 5, 3, 4, 2, 1, 6, 3],)),
     )
     for expected, args in tests:
         tic = time.perf_counter()
@@ -113,6 +108,4 @@ if __name__ == '__main__':
         try:
             assert(expected == res)
         except AssertionError as e:
-            print(f'ERROR {args} produced {res} when {expected} was expected!')
-
-
+            print(f'ERROR {args} produced {res} when {expected} was expected!\n')
