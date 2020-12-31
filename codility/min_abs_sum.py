@@ -47,31 +47,42 @@ def solution(A):
     Array S is a red herring!
     """
     n = len(A)
-    # A should be sorted to allow a greedy algorithm
-    A.sort()
     
-    if n < 2:
+    if n < 2: # quick base case
         return 0 if not n else A[0]
-    elif n == 2:
-        return abs(A[1]) - abs(A[0]) 
     
-    max_point = sum(A)
-    halfway = max_point // 2
+    # Set all values to absolute
+    for i in range(n):
+        A[i] = abs(A[i])
+
+    # Working with a sorted array means we are working with the lowest 
+    # possible value at each iteration which simplifies things.
+    A.sort()
+
+    maximum = sum(A)
+    mid_point = maximum // 2
     current = 0
     for i in A:
-        temp = current + i
-        if temp > halfway:
-            return min(max_point - temp, max_point - current, max_point - current + i)
-        else:
-            current = temp
-    return current
+        current += i
+        if current > mid_point:
+            # Now we must determine the minimum difference between
+            #   1) current - remainder or 2) The previous - remainder
+            previous = current - i
+            return min(
+                abs(current -  (maximum - current)), 
+                abs(previous - (maximum - previous))
+            )
+
+    
 
 if __name__ == '__main__':
     tests = (
         (3, ([1, 3, 3, 4],)),
         (0, ([],)),
         (0, ([2,2],)),
-        (1, ([-2,1],)),        
+        (1, ([-2,1],)),
+        (0, ([2, 3, 2, 2, 3],)),
+        (0, ([1, 5, -2, 5, 2, 3],)),   
     )
     for expected, args in tests:
         tic = time.perf_counter()
