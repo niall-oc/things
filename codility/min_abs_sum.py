@@ -35,6 +35,8 @@ Write an efficient algorithm for the following assumptions:
 N is an integer within the range [0..20,000];
 each element of array A is an integer within the range [−100..100].
 
+90% solution https://app.codility.com/demo/results/trainingRBWTKF-FVG/
+I'm convinced this is 100%!
 """
 import time
 
@@ -61,28 +63,43 @@ def solution(A):
 
     maximum = sum(A)
     mid_point = maximum // 2
-    current = 0
-    for i in A:
-        current += i
-        if current > mid_point:
-            # Now we must determine the minimum difference between
-            #   1) current - remainder or 2) The previous - remainder
-            previous = current - i
-            return min(
-                abs(current -  (maximum - current)), 
-                abs(previous - (maximum - previous))
-            )
 
+    balanced = not bool(maximum - (2*mid_point))
+    
+    left = 0
+    right = 0
+
+    # print(f'balanced: {balanced}, maximum: {maximum}, mid_point: {mid_point}, A:{A} ')
+
+    for i in range(n-1, -1, -1):
+        if right + A[i] <= mid_point:
+            right += A[i]
+        elif left + A[i] <= mid_point:
+            left += A[i]
+        else:
+            if left < right:
+                left += A[i]
+            else:
+                right += A[i]
+    # print(f'left: {left}, right: {right}')
+
+    return min(
+        abs((maximum - right) - right),
+        abs((maximum - left) - left) 
+        )
     
 
 if __name__ == '__main__':
     tests = (
-        (3, ([1, 3, 3, 4],)),
+        #( expected, args )
+        (1, ([1, 3, 3, 4],)),
         (0, ([],)),
         (0, ([2,2],)),
         (1, ([-2,1],)),
         (0, ([2, 3, 2, 2, 3],)),
-        (0, ([1, 5, -2, 5, 2, 3],)),   
+        (0, ([1, 5, -2, 5, 2, 3],)),
+        (0, ([5, 5, 5, 4, 3, 3, 2, 2, 2, 2, 2, 2, 1, 1, 1],)),
+        (1, ([20, 13, 3, 3, 3, 3],)),
     )
     for expected, args in tests:
         tic = time.perf_counter()
