@@ -35,8 +35,9 @@ Write an efficient algorithm for the following assumptions:
 N is an integer within the range [0..20,000];
 each element of array A is an integer within the range [−100..100].
 
-90% solution https://app.codility.com/demo/results/trainingRBWTKF-FVG/
+90% solution https://app.codility.com/demo/results/trainingC9JQP9-NBD/
 I'm convinced this is 100%!
+O(N * max(abs(A))**2) 
 """
 import time
 
@@ -75,10 +76,7 @@ def solution(A):
     
     print(f'left: {left}, right: {right}')
 
-    return min(
-        abs((maximum - right) - right),
-        abs((maximum - left) - left) 
-        )
+    return abs(left - right)
     
 
 if __name__ == '__main__':
@@ -95,6 +93,8 @@ if __name__ == '__main__':
         (1, ([6, 9, -6, 9, 9, -6, 9, -9, 6, 0, 6, 6, 4, 6, 6],)),
         (2, ([48, 12, 12, 6, 6, 6, 6, 1, 3],)),
         (36, ([67, 7, 5, 3, 4, 2, 1, 6, 3],)),
+        (3, ([7, 7, 7, 4, 4, 4],)),
+        (1, ([5, 2, 7, 5],)),
     )
     for expected, args in tests:
         tic = time.perf_counter()
