@@ -66,6 +66,7 @@ Write an efficient algorithm for the following assumptions:
         N is an integer within the range [2..100,000];
         each element of array A is an integer within the range [−10,000..10,000].
 25% solution https://app.codility.com/demo/results/trainingKKCXE4-V48/
+25% solution https://app.codility.com/demo/results/trainingWFAAHF-GDW/
 I believe these are the true maximal scores!!
 """
 
@@ -84,29 +85,30 @@ def solution(A):
     lowest_value = -1000001
     limit = n-1
     i=1
-    # print(f'\nA:{A}')
+    print(f'\nA:{A}')
     while i < limit:
-        # print(f'max_score: {max_score}, i: {i}')
+        print(f'max_score: {max_score}, i: {i}: A[i]: {A[i]}')
         
         if A[i] < 0:  # Hanndle negative marks
-            # print(f'Negative case: {A[i]}')
+            print(f'Negative case: {A[i]}')
             # examine the next 6 spaces or up to the limit for the best index
             options = [A[v] for v in range(i, min(i+7, limit))]
             # Determine if there is a positive value we can jump too
             positives = [v for v in options if v > -1]
-            # print(f'options: {options}, positives: {positives}')
+            print(f'options: {options}, positives: {positives}')
             if positives: # Jump to the first positive.
                 i = A.index(positives[0], i)
             else:         # or jump to the best negative.
                 if n - i > 6:
-                    i += options.index(max(options))
+                    # reverse the options to find the highest best index.
+                    i += abs(options[::-1].index(max(options)) - (len(options) -1))
                 else:
-                    # print('The end is in sight!')
+                    print('The end is in sight!')
                     break # we can jump pas all negatives to the end.
-            # print(f'i is now {i} and A[i] is {A[i]}')
+            print(f'i is now {i} and A[i] is {A[i]}')
 
         max_score += A[i]
-        # print(f'max_score is now {max_score}')
+        print(f'max_score is now {max_score}')
         i += 1
     return max_score + A[-1]
 
@@ -117,6 +119,7 @@ if __name__ == '__main__':
         (8, ([1, -2, 0, 9, -1, -2],)),
         (4, ([-2, 5, 1],)),
         (-12, ([0, -4, -5, -2, -7, -9, -3, -10],)),
+        (-6, ([0, -2, -2, -9, -9, -9, -9, -9, -2, -9, -2, -2, -9, -2, -2],)),
     )
     for expected, args in tests:
         tic = time.perf_counter()
