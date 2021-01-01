@@ -73,8 +73,7 @@ import time
 
 def solution(A):
     """
-    Add every possible value greater than -1 and when you encounter a negative
-    stretch try to take the best values on each roll.
+    Incrimentally walk the list
     """
     n = len(A)
 
@@ -85,32 +84,29 @@ def solution(A):
     lowest_value = -1000001
     limit = n-1
     i=1
-    print(f'A:{A}')
+    # print(f'\nA:{A}')
     while i < limit:
-        print(f'max_score: {max_score}, i: {i}')
-        if A[i] > 1:
-            max_score += A[i]
-            print(f'Positives and break max_score: {max_score}')
-        else:
-            negatives = lowest_value; positives=False
-            d = 0; last = i
-            # Examine all dice rolls
-            while i+d < limit and d < 7:   
-                # if we don't find a positive score, then determine the best negative
-                print(f'negatives: {negatives}, A[i+d]: {A[i+d]}')
-                if A[i+d] < 0:
-                    negatives = max(A[i+d], negatives)
-                    last = i+d
+        # print(f'max_score: {max_score}, i: {i}')
+        
+        if A[i] < 0:  # Hanndle negative marks
+            # print(f'Negative case: {A[i]}')
+            # examine the next 6 spaces or up to the limit for the best index
+            options = [A[v] for v in range(i, min(i+7, limit))]
+            # Determine if there is a positive value we can jump too
+            positives = [v for v in options if v > -1]
+            # print(f'options: {options}, positives: {positives}')
+            if positives: # Jump to the first positive.
+                i = A.index(positives[0], i)
+            else:         # or jump to the best negative.
+                if n - i > 6:
+                    i += options.index(max(options))
                 else:
-                    max_score += A[i+d]
-                    i += d
-                    positives = True
-                    print(f'Positives and break max_score: {max_score}')
-                    break
-                d += 1
-            if not positives:
-                max_score += negatives
-                i = last
+                    # print('The end is in sight!')
+                    break # we can jump pas all negatives to the end.
+            # print(f'i is now {i} and A[i] is {A[i]}')
+
+        max_score += A[i]
+        # print(f'max_score is now {max_score}')
         i += 1
     return max_score + A[-1]
 
