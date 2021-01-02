@@ -35,8 +35,7 @@ Write an efficient algorithm for the following assumptions:
 N is an integer within the range [0..20,000];
 each element of array A is an integer within the range [−100..100].
 
-90% solution https://app.codility.com/demo/results/trainingC9JQP9-NBD/
-I'm convinced this is 100%!
+100% solution https://app.codility.com/demo/results/trainingNVW2NJ-SSA/
 O(N * max(abs(A))**2) 
 """
 import time
@@ -64,19 +63,26 @@ def solution(A):
     A.sort()
 
     mid_point = maximum // 2
-    left = right = 0
-
-    print(f'\nmaximum: {maximum}, mid_point: {mid_point}, A:{A} ')
+    A_left = A_right = 0 # For even stacking
+    O_left = O_right = 0 # For on side first stacked
+    
+    #print(f'\nmaximum: {maximum}, mid_point: {mid_point}, A:{A} ')
 
     for i in range(n-1, -1, -1):
-        if right + A[i] <= mid_point or right < left:
-            right += A[i]
+        # using and to evenly stack left and right
+        if A_right + A[i] <= mid_point and A_right < A_left:
+            A_right += A[i]
         else:
-            left += A[i]
+            A_left += A[i]
+        # using or to stack right fully before left
+        if O_right + A[i] <= mid_point or O_right < O_left:
+            O_right += A[i]
+        else:
+            O_left += A[i]
     
-    print(f'left: {left}, right: {right}')
-
-    return abs(left - right)
+        #print(f'A_left: {A_left}, A_right: {A_right}')
+        #print(f'O_left: {O_left}, O_right: {O_right}')
+    return min(abs(A_left - A_right), abs(O_left - O_right))
     
 
 if __name__ == '__main__':
@@ -95,6 +101,7 @@ if __name__ == '__main__':
         (36, ([67, 7, 5, 3, 4, 2, 1, 6, 3],)),
         (3, ([7, 7, 7, 4, 4, 4],)),
         (1, ([5, 2, 7, 5],)),
+        (0, ([18,99,-50,100,4]*4,)),
     )
     for expected, args in tests:
         tic = time.perf_counter()
