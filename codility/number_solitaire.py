@@ -65,51 +65,64 @@ Write an efficient algorithm for the following assumptions:
 
         N is an integer within the range [2..100,000];
         each element of array A is an integer within the range [−10,000..10,000].
-25% solution https://app.codility.com/demo/results/trainingKKCXE4-V48/
-25% solution https://app.codility.com/demo/results/trainingWFAAHF-GDW/
-I believe these are the true maximal scores!!
+( not always finding the best score ahead :-/ )
+50% solution https://app.codility.com/demo/results/trainingFC9NZG-ERW/
 """
 
 import time
 
 def solution(A):
     """
-    Incrimentally walk the list
+    Incrimentally walk the list. From any index in the list we want
+    the dice roll to support the maximum score. That implies the following.
+    
+    1. Consider positive cases in the next 6 indexes. We don't want to miss any
+       therefore we take the nearest positive value and make that our index.
+    2. Consider negative cases in the next 6 indexes. We want to jump to the
+       nearest highest minimum value.
     """
     n = len(A)
 
     if n == 2:
         return sum(A)
 
-    max_score = A[0]
-    lowest_value = -1000001
-    limit = n-1
-    i=1
-    print(f'\nA:{A}')
+    max_score = A[0]  # set max_score to our starting score
+    limit = n-1; i=1; # working from index 1 to the second last index
+    print(f'\nA:{A}, i{i}: limit:{limit}')
+    
     while i < limit:
-        print(f'max_score: {max_score}, i: {i}: A[i]: {A[i]}')
+        print(f'-BEGIN- max_score:{max_score}, i:{i}')
+        # Look through the next 6 values and track the highest furthest negative
+        # OR break on the first positive.
+        highest_negative = -100000001
+        lowest_positive_idx = highest_negative_idx = 0
+        end = min(i+6, limit)
+        for bn in range(i, end):
+            # Record a negative as we encounter it.
+            if A[bn] < 1 and A[bn] >= highest_negative:
+                # in the case of their only being negative numbers ahead
+                # we must find the furthest highest index.
+                highest_negative = A[bn]
+                highest_negative_idx = bn
+                print(f'NEGATIVE - i:{i}, end:{end}, A[{bn}]: {A[bn]}')
+            elif A[bn] > 0:
+                # In a scoring case leave loop and proceed to score
+                lowest_positive_idx = bn
+                print(f'POSITIVE - i:{i}, end:{end}, A[{bn}]: {A[bn]}')
+                break
         
-        if A[i] < 0:  # Hanndle negative marks
-            print(f'Negative case: {A[i]}')
-            # examine the next 6 spaces or up to the limit for the best index
-            options = [A[v] for v in range(i, min(i+7, limit))]
-            # Determine if there is a positive value we can jump too
-            positives = [v for v in options if v > -1]
-            print(f'options: {options}, positives: {positives}')
-            if positives: # Jump to the first positive.
-                i = A.index(positives[0], i)
-            else:         # or jump to the best negative.
-                if n - i > 6:
-                    # reverse the options to find the highest best index.
-                    i += abs(options[::-1].index(max(options)) - (len(options) -1))
-                else:
-                    print('The end is in sight!')
-                    break # we can jump pas all negatives to the end.
-            print(f'i is now {i} and A[i] is {A[i]}')
-
+        # determine the best way forward.
+        if lowest_positive_idx:
+            i = lowest_positive_idx
+        elif i+6 > limit: # The end is in sight!
+            # There were no positive numbers in our scan but we can finish.
+            print('The end is in sight!')
+            break
+        else:
+            i = highest_negative_idx
         max_score += A[i]
-        print(f'max_score is now {max_score}')
         i += 1
+        print(f'--END-- max_score:{max_score}, i:{i}')
     return max_score + A[-1]
 
 
