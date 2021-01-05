@@ -2,9 +2,7 @@
 """
 Author: Niall O'Connor
 
-#
-
-
+# https://app.codility.com/programmers/lessons/17-dynamic_programming/number_solitaire/
 
 A game for one player is played on a board consisting of N consecutive squares,
 numbered from 0 to N − 1. There is a number written on each square. A non-empty
@@ -66,12 +64,14 @@ Write an efficient algorithm for the following assumptions:
         N is an integer within the range [2..100,000];
         each element of array A is an integer within the range [−10,000..10,000].
 ( not always finding the best score ahead :-/ )
-50% solution https://app.codility.com/demo/results/trainingFC9NZG-ERW/
+100% solution https://app.codility.com/demo/results/trainingG5FNV9-7SY/
+50%  solution https://app.codility.com/demo/results/trainingFC9NZG-ERW/
+O(n)
 """
 
 import time
 
-def solution(A):
+def solution_old(A):
     """
     Incrimentally walk the list. From any index in the list we want
     the dice roll to support the maximum score. That implies the following.
@@ -125,6 +125,28 @@ def solution(A):
         print(f'--END-- max_score:{max_score}, i:{i}')
     return max_score + A[-1]
 
+def solution(A):
+    """
+    On any square ask, what is the best exit score from any of the previous 6
+    squares that I can be reached from? And what wil me exit score be?
+
+          +-----------------------------------------------+
+    entry | 0 | 0 | 0 | 0 | 0 | 0 | 0 |-2 |-4 | -4| 5 | 5 |
+    ------+-----------------------------------------------+
+    value | 0 |-2 |-9 |-9 |-9 |-9 |-9 |-2 |-2 | 9 | 0 |-2 |
+    ------+-----------------------------------------------+
+    exit  | 0 |-2 |-9 |-9 |-9 |-9 |-9 |-4 |-6 | 5 | 5 | 3 |
+    ------+-----------------------------------------------+
+    """
+    n = len(A)
+    MAX_ROLL = 6 # 6 sided dice means we can look back a max of 6 spaces.
+    exit_score = [A[0]] * n  # Set all exit scores to start score
+    for i in range(1, n):
+        # At each point slice the previous 6 exit scores and choose the best
+        spread = exit_score[max(i-MAX_ROLL, 0):i]
+        # print(spread, max(spread))
+        exit_score[i] = A[i] + max(spread)
+    return exit_score[-1]
 
 if __name__ == '__main__':
     tests = (
@@ -133,6 +155,7 @@ if __name__ == '__main__':
         (4, ([-2, 5, 1],)),
         (-12, ([0, -4, -5, -2, -7, -9, -3, -10],)),
         (-6, ([0, -2, -2, -9, -9, -9, -9, -9, -2, -9, -2, -2, -9, -2, -2],)),
+        (20, ([0, -2, -9, -9, -2, 7, 9, 1, 3],)),
     )
     for expected, args in tests:
         tic = time.perf_counter()
