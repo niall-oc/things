@@ -77,36 +77,46 @@ Write an efficient algorithm for the following assumptions:
         each element of array A is an integer within the range [1..1,000,000,000];
         the elements of A are all distinct.
 
-69% solution https://app.codility.com/demo/results/trainingXCYKCB-J67/
+69%  solution https://app.codility.com/demo/results/trainingXCYKCB-J67/
+100% solution https://app.codility.com/demo/results/trainingT58YJB-DWW/
 """
 
 import time
 
+def binary_search(L, target):
+    """
+    The point at which the target should be inserted is returned.
+    """
+    lower = 0
+    upper = len(L)-1
+    while lower <= upper:
+        mid = (lower + upper) // 2
+        if target > L[mid]:
+            lower = mid + 1
+        else: # target < L[mid]
+            upper = mid - 1
+    return lower 
+            
+
+
 def LIS(A):
-    n = len(A)
-    L = [0] * n
- 
-    # init to len 1
-    L[0] = 1
- 
-    for i in range(1, n):
-        # not happy about this n^2 solutions are usually bad.
-        for j in range(i):
-            # if we are increasing and our score is better update it.
-            if A[j] < A[i] and L[j] > L[i]:
-                L[i] = L[j]
- 
-        # This point is now one longer.
-        L[i] = L[i] + 1
-    print(['{0:2d}'.format(i) for i in A[::3]])
-    print(['{0:2d}'.format(i) for i in L[::3]])
-    print(['{0:2d}'.format(i) for i in A[1::3]])
-    print(['{0:2d}'.format(i) for i in L[1::3]])
-    print(['{0:2d}'.format(i) for i in A[2::3]])
-    print(['{0:2d}'.format(i) for i in L[2::3]])
-    print('END MIRROR')
-    # return longest increasing sub-sequence (having maximum length)
-    return max(L)
+    lis = []
+    for num in A:
+        # determine where the number should be inserted in the lis.
+        insert_idx = binary_search(lis, num)
+        if insert_idx < len(lis):
+            # If the number less than any encountered number then it:
+            # 1. Replaces a previous part of the LIS
+            # 2. Is a new starting point for the Array.
+            # Because we are not tasked with only finding the LEN of the LIS,
+            # it is safe to over write a previous value as long as it doesn't
+            # alter the list length incorrectly.
+            lis[insert_idx] = num
+        else:
+            # In the case of a new current max value, append it and increase
+            # the length of the lis.
+            lis.append(num)
+    return len(lis)
 
 def solution(A):
     """
@@ -115,7 +125,7 @@ def solution(A):
 
     VITAL!! You must start in the left direction.
     """
-    mirror_limit = max(A) + 1
+    mirror_limit = max(A)
     total_mirrors = []
     # Because we are travelling left it is essential that the original mirror is last.
     for i in A:
@@ -124,7 +134,6 @@ def solution(A):
             (mirror_limit * 2) - i, # first mirror
             i,
         ]
-    print('BEGIN')
     return LIS(total_mirrors)
 
 if __name__ == '__main__':
