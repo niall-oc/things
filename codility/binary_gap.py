@@ -36,10 +36,9 @@ Write an efficient algorithm for the following assumptions:
 
 import time
 
-def solution(N):
+def solution_old(N):
     """
-    Rendering N as a string in binary format is an easy way to walk the bits and 
-    count the max gap.
+    Render N as a string and process the bits
     """
     count = binary_gap = 0
     for b in "{0:b}".format(N):
@@ -50,6 +49,20 @@ def solution(N):
             count += 1
     return binary_gap
 
+def solution(N):
+    """
+    Use bit shifting to process the bits
+    """
+    count = binary_gap = 0
+    for i in range(64): # 64 bit machine. Just to be sure! :-)
+        bit_on = N & (1 << i)
+        if bit_on:
+            binary_gap = max(count, binary_gap)
+            count = 0
+        else:
+            count += 1
+    return binary_gap
+    
 
 if __name__ == '__main__':
 
