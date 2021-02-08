@@ -1,1 +1,1 @@
-Working with RDF in different languages
+Working with RDF in different languages.
