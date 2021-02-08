@@ -2,7 +2,6 @@
 import unittest
 import delimit
 
-
 class DelimitTest(unittest.TestCase):
     """
     Delimit a file that is human readable with white spaces and no delimiter.
